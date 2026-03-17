@@ -1,0 +1,109 @@
+export interface User {
+    id: number;
+    name: string;
+    email: string;
+    phone: string | null;
+    role: 'admin' | 'parent' | 'operator';
+    status: 'active' | 'inactive';
+    email_verified_at: string | null;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface School {
+    id: number;
+    name: string;
+    address: string | null;
+    phone: string | null;
+    logo: string | null;
+    status: 'active' | 'inactive';
+    created_at: string;
+    updated_at: string;
+    canteens?: Canteen[];
+    students_count?: number;
+}
+
+export interface Student {
+    id: number;
+    parent_id: number;
+    school_id: number;
+    name: string;
+    ic_number: string | null;
+    class_name: string | null;
+    wallet_uuid: string;
+    wallet_balance: number;
+    daily_limit: number | null;
+    daily_spent: number;
+    photo: string | null;
+    status: 'active' | 'inactive';
+    created_at: string;
+    updated_at: string;
+    school?: School;
+    parent?: User;
+    transactions?: Transaction[];
+}
+
+export interface Canteen {
+    id: number;
+    school_id: number;
+    operator_id: number;
+    name: string;
+    status: 'active' | 'inactive';
+    created_at: string;
+    updated_at: string;
+    school?: School;
+    operator?: User;
+    menu_items?: MenuItem[];
+}
+
+export interface MenuItem {
+    id: number;
+    canteen_id: number;
+    name: string;
+    price: number;
+    category: string | null;
+    is_available: boolean;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Transaction {
+    id: number;
+    student_id: number;
+    canteen_id: number | null;
+    operator_id: number | null;
+    type: 'topup' | 'purchase' | 'refund';
+    amount: number;
+    balance_before: number;
+    balance_after: number;
+    description: string | null;
+    reference_id: string | null;
+    created_at: string;
+    student?: Student;
+    canteen?: Canteen;
+    operator?: User;
+}
+
+export interface Topup {
+    id: number;
+    parent_id: number;
+    student_id: number;
+    amount: number;
+    payment_method: 'fpx' | 'manual';
+    gateway: string | null;
+    gateway_ref: string | null;
+    status: 'pending' | 'success' | 'failed';
+    created_at: string;
+    updated_at: string;
+    student?: Student;
+}
+
+export interface PageProps {
+    auth: {
+        user: User | null;
+    };
+    flash: {
+        success: string | null;
+        error: string | null;
+    };
+}
