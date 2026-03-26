@@ -224,6 +224,22 @@ export interface PibgFeeParent {
     school?: School;
 }
 
+export interface SubscriptionPackage {
+    id: number;
+    name: string;
+    slug: string;
+    description: string | null;
+    price: number;
+    duration_days: number;
+    billing_cycle: 'trial' | 'monthly' | 'yearly';
+    features: string[] | null;
+    is_active: boolean;
+    sort_order: number;
+    created_at: string;
+    updated_at: string;
+    schools_count?: number;
+}
+
 export interface Withdrawal {
     id: number;
     entity_type: 'store' | 'school';

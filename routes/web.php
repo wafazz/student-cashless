@@ -169,6 +169,9 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/school-users', [\App\Http\Controllers\Admin\PibgController::class, 'schoolUsers'])->name('admin.school-users');
     Route::post('/school-users', [\App\Http\Controllers\Admin\PibgController::class, 'storeSchoolUser'])->name('admin.school-users.store');
     Route::put('/school-users/{user}', [\App\Http\Controllers\Admin\PibgController::class, 'updateSchoolUser'])->name('admin.school-users.update');
+    Route::get('/packages', [\App\Http\Controllers\Admin\PackageController::class, 'index'])->name('admin.packages');
+    Route::post('/packages', [\App\Http\Controllers\Admin\PackageController::class, 'store'])->name('admin.packages.store');
+    Route::put('/packages/{package}', [\App\Http\Controllers\Admin\PackageController::class, 'update'])->name('admin.packages.update');
     Route::get('/withdrawals', [\App\Http\Controllers\Admin\WithdrawalController::class, 'index'])->name('admin.withdrawals');
     Route::post('/withdrawals/{withdrawal}/approve', [\App\Http\Controllers\Admin\WithdrawalController::class, 'approve'])->name('admin.withdrawals.approve');
     Route::post('/withdrawals/{withdrawal}/paid', [\App\Http\Controllers\Admin\WithdrawalController::class, 'markPaid'])->name('admin.withdrawals.paid');

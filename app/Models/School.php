@@ -8,7 +8,7 @@ class School extends Model
 {
     protected $fillable = [
         'name', 'address', 'phone', 'logo', 'status',
-        'subscription_fee', 'subscription_status', 'subscription_start', 'subscription_end',
+        'subscription_fee', 'subscription_status', 'subscription_start', 'subscription_end', 'package_id',
     ];
 
     protected $casts = [
@@ -20,6 +20,11 @@ class School extends Model
     public function students()
     {
         return $this->hasMany(Student::class);
+    }
+
+    public function package()
+    {
+        return $this->belongsTo(SubscriptionPackage::class, 'package_id');
     }
 
     public function classes()
