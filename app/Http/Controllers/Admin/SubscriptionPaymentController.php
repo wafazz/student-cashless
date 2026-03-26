@@ -59,24 +59,32 @@ class SubscriptionPaymentController extends Controller
 
             $msg = "Approved! {$school->name} trial activated until {$end->format('d/m/Y')}.";
         } else {
-            // Monthly/Yearly always starts 1st of next month
-            $baseDate = $hasActiveSub ? $currentEnd : now();
-            $start = $baseDate->copy()->startOfMonth()->addMonth(); // 1st of next month
+            $isOnTrial = $hasActiveSub && $school->subscription_status === 'trial';
+            $isExpired = !$hasActiveSub; // subscription already ended
+
+            if ($isOnTrial) {
+                // Trial active → paid starts 1st of next month, trial extends to fill gap
+                $start = $currentEnd->copy()->startOfMonth()->addMonth();
+            } elseif ($isExpired) {
+                // Expired → paid starts 1st of current month (retroactive, covers this month)
+                $start = now()->startOfMonth();
+            } else {
+                // Active paid (renewal) → starts 1st of month after current ends
+                $start = $currentEnd->copy()->startOfMonth()->addMonth();
+            }
+
             $end = $package->billing_cycle === 'yearly'
                 ? $start->copy()->addYear()
                 : $start->copy()->addMonth();
 
-            // If school is on trial, extend trial to last day before paid starts (no gap)
-            // Trial ends 3 Apr → paid starts 1 May → trial extended to 30 Apr
-            $isOnTrial = $hasActiveSub && $school->subscription_status === 'trial';
-            $trialExtendEnd = $start->copy()->subDay(); // e.g. 30 Apr
+            $trialExtendEnd = $start->copy()->subDay();
 
             $school->update([
                 'package_id' => $package->id,
                 'subscription_fee' => $package->price,
                 'subscription_status' => $isOnTrial ? 'trial' : 'active',
-                'subscription_start' => $start, // paid plan start (1st of month)
-                'subscription_end' => $end,     // paid plan end
+                'subscription_start' => $start,
+                'subscription_end' => $end,
             ]);
 
             $msg = $isOnTrial
