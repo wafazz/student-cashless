@@ -147,6 +147,11 @@ Route::prefix('school')->middleware(['auth', 'role:school'])->group(function () 
     Route::get('/withdrawals', [\App\Http\Controllers\School\WithdrawalController::class, 'index'])->name('school.withdrawals');
     Route::post('/withdrawals/bank', [\App\Http\Controllers\School\WithdrawalController::class, 'updateBank'])->name('school.withdrawals.bank');
     Route::post('/withdrawals/request', [\App\Http\Controllers\School\WithdrawalController::class, 'request'])->name('school.withdrawals.request');
+    Route::get('/settings', [\App\Http\Controllers\School\SettingController::class, 'index'])->name('school.settings');
+    Route::put('/settings', [\App\Http\Controllers\School\SettingController::class, 'update'])->name('school.settings.update');
+    Route::delete('/settings/logo', [\App\Http\Controllers\School\SettingController::class, 'removeLogo'])->name('school.settings.logo.remove');
+    Route::get('/receipt/pibg/{pibgFeeParent}', [\App\Http\Controllers\School\ReceiptController::class, 'pibgReceipt'])->name('school.receipt.pibg');
+    Route::get('/receipt/fee/{schoolFeeStudent}', [\App\Http\Controllers\School\ReceiptController::class, 'schoolFeeReceipt'])->name('school.receipt.fee');
 });
 
 // Admin Routes

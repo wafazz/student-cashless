@@ -79,6 +79,7 @@ export default function PibgFeeDetail({ fee, assignments }: Props) {
                             <th className="text-left px-6 py-3 font-medium text-gray-500">Phone</th>
                             <th className="text-center px-6 py-3 font-medium text-gray-500">Status</th>
                             <th className="text-left px-6 py-3 font-medium text-gray-500">Paid At</th>
+                            <th className="text-right px-6 py-3 font-medium text-gray-500">Receipt</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
@@ -94,6 +95,11 @@ export default function PibgFeeDetail({ fee, assignments }: Props) {
                                     </span>
                                 </td>
                                 <td className="px-6 py-3 text-gray-500 text-xs">{a.paid_at ? new Date(a.paid_at).toLocaleString('ms-MY') : '-'}</td>
+                                <td className="px-6 py-3 text-right">
+                                    {a.status === 'paid' && (
+                                        <a href={`/school/receipt/pibg/${a.id}`} className="text-teal-600 hover:underline text-xs">Download</a>
+                                    )}
+                                </td>
                             </tr>
                         ))}
                     </tbody>
