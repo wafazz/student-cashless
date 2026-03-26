@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Operator;
 
 use App\Http\Controllers\Controller;
+use App\Models\Setting;
 use App\Models\Transaction;
 use App\Models\Withdrawal;
 use Illuminate\Http\Request;
@@ -42,6 +43,7 @@ class WithdrawalController extends Controller
             'totalEarned' => round($totalEarned - $totalRefunded, 2),
             'totalWithdrawn' => round($totalWithdrawn, 2),
             'withdrawals' => $withdrawals,
+            'feePercent' => (float) Setting::get('withdrawal_fee_store', '3'),
         ]);
     }
 
@@ -87,7 +89,8 @@ class WithdrawalController extends Controller
             return back()->with('error', 'Amount exceeds available balance (RM' . number_format($available, 2) . ').');
         }
 
-        $platformFee = round($request->amount * 0.03, 2); // 3% platform fee
+        $feePercent = (float) Setting::get('withdrawal_fee_store', '3');
+        $platformFee = round($request->amount * ($feePercent / 100), 2);
         $netAmount = $request->amount - $platformFee;
 
         Withdrawal::create([
@@ -103,6 +106,6 @@ class WithdrawalController extends Controller
             'requested_at' => now(),
         ]);
 
-        return back()->with('success', 'Withdrawal request submitted. Net amount: RM' . number_format($netAmount, 2) . ' (after 3% platform fee).');
+        return back()->with('success', 'Withdrawal request submitted. Net: RM' . number_format($netAmount, 2) . " (after {$feePercent}% platform fee).");
     }
 }

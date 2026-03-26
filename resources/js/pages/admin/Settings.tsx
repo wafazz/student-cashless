@@ -55,6 +55,27 @@ export default function Settings({ settings }: Props) {
                 </div>
             </div>
 
+            {/* Withdrawal Fees */}
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+                <h2 className="text-lg font-semibold text-gray-800 mb-4">Withdrawal Fees</h2>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Store Withdrawal Fee (%)</label>
+                        <input type="number" step="0.5" min="0" max="50" value={data.withdrawal_fee_store}
+                            onChange={e => setData('withdrawal_fee_store', e.target.value)}
+                            className="w-full px-4 py-2.5 border border-gray-300 rounded-xl outline-none" />
+                        <p className="text-xs text-gray-400 mt-1">Platform fee deducted when canteen/koperasi withdraws earnings</p>
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">School Withdrawal Fee (%)</label>
+                        <input type="number" step="0.5" min="0" max="50" value={data.withdrawal_fee_school}
+                            onChange={e => setData('withdrawal_fee_school', e.target.value)}
+                            className="w-full px-4 py-2.5 border border-gray-300 rounded-xl outline-none" />
+                        <p className="text-xs text-gray-400 mt-1">Platform fee deducted when school withdraws PIBG/school fee collections</p>
+                    </div>
+                </div>
+            </div>
+
             {/* Bayarcash */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
                 <h2 className="text-lg font-semibold text-gray-800 mb-4">Bayarcash (FPX)</h2>

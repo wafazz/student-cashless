@@ -5,6 +5,7 @@ namespace App\Http\Controllers\School;
 use App\Http\Controllers\Controller;
 use App\Models\PibgFeeParent;
 use App\Models\SchoolFeeStudent;
+use App\Models\Setting;
 use App\Models\Withdrawal;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -44,6 +45,7 @@ class WithdrawalController extends Controller
                 'bank_holder' => $user->bank_holder,
             ],
             'withdrawals' => $withdrawals,
+            'feePercent' => (float) Setting::get('withdrawal_fee_school', '2'),
         ]);
     }
 
@@ -86,7 +88,8 @@ class WithdrawalController extends Controller
             return back()->with('error', 'Amount exceeds available balance (RM' . number_format($available, 2) . ').');
         }
 
-        $platformFee = round($request->amount * 0.02, 2); // 2% platform fee for schools
+        $feePercent = (float) Setting::get('withdrawal_fee_school', '2');
+        $platformFee = round($request->amount * ($feePercent / 100), 2);
         $netAmount = $request->amount - $platformFee;
 
         Withdrawal::create([
@@ -102,6 +105,6 @@ class WithdrawalController extends Controller
             'requested_at' => now(),
         ]);
 
-        return back()->with('success', 'Withdrawal request submitted. Net: RM' . number_format($netAmount, 2) . ' (after 2% platform fee).');
+        return back()->with('success', 'Withdrawal request submitted. Net: RM' . number_format($netAmount, 2) . " (after {$feePercent}% platform fee).");
     }
 }

@@ -9,9 +9,10 @@ interface Props {
     totalEarned: number;
     totalWithdrawn: number;
     withdrawals: Withdrawal[];
+    feePercent: number;
 }
 
-export default function Withdrawals({ canteen, balance, totalEarned, totalWithdrawn, withdrawals }: Props) {
+export default function Withdrawals({ canteen, balance, totalEarned, totalWithdrawn, withdrawals, feePercent }: Props) {
     const [showBank, setShowBank] = useState(false);
     const [showRequest, setShowRequest] = useState(false);
 
@@ -107,7 +108,7 @@ export default function Withdrawals({ canteen, balance, totalEarned, totalWithdr
             {showRequest && (
                 <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
                     <h3 className="font-semibold text-gray-800 mb-2">Request Withdrawal</h3>
-                    <p className="text-xs text-gray-500 mb-4">3% platform fee will be deducted. Min RM10. To: {canteen.bank_name} - {canteen.bank_account}</p>
+                    <p className="text-xs text-gray-500 mb-4">{feePercent}% platform fee will be deducted. Min RM10. To: {canteen.bank_name} - {canteen.bank_account}</p>
                     <form onSubmit={handleRequest} className="flex gap-3 items-end">
                         <div className="flex-1">
                             <label className="block text-sm font-medium text-gray-700 mb-1">Amount (RM)</label>
@@ -117,8 +118,8 @@ export default function Withdrawals({ canteen, balance, totalEarned, totalWithdr
                         </div>
                         {requestForm.data.amount && (
                             <div className="text-sm text-gray-500 pb-2">
-                                Fee: RM {(parseFloat(requestForm.data.amount || '0') * 0.03).toFixed(2)} |
-                                Net: <span className="font-bold text-green-600">RM {(parseFloat(requestForm.data.amount || '0') * 0.97).toFixed(2)}</span>
+                                Fee: RM {(parseFloat(requestForm.data.amount || '0') * feePercent / 100).toFixed(2)} |
+                                Net: <span className="font-bold text-green-600">RM {(parseFloat(requestForm.data.amount || '0') * (1 - feePercent / 100)).toFixed(2)}</span>
                             </div>
                         )}
                         <button type="submit" disabled={requestForm.processing} className="bg-green-600 text-white px-6 py-2.5 rounded-xl font-medium disabled:opacity-50">Submit</button>

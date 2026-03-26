@@ -25,6 +25,8 @@ class SettingController extends Controller
                 'toyyibpay_key' => Setting::get('toyyibpay_key', ''),
                 'toyyibpay_category' => Setting::get('toyyibpay_category', ''),
                 'toyyibpay_sandbox' => Setting::get('toyyibpay_sandbox', '1'),
+                'withdrawal_fee_store' => Setting::get('withdrawal_fee_store', '3'),
+                'withdrawal_fee_school' => Setting::get('withdrawal_fee_school', '2'),
             ],
         ]);
     }
@@ -37,12 +39,15 @@ class SettingController extends Controller
             'default_daily_limit' => 'nullable|numeric|min:0',
             'topup_service_fee' => 'nullable|numeric|min:0',
             'topup_fee_waiver_min' => 'nullable|numeric|min:0',
+            'withdrawal_fee_store' => 'nullable|numeric|min:0|max:50',
+            'withdrawal_fee_school' => 'nullable|numeric|min:0|max:50',
         ]);
 
         $keys = [
             'min_topup', 'max_topup', 'default_daily_limit', 'topup_service_fee', 'topup_fee_waiver_min',
             'bayarcash_portal_key', 'bayarcash_token', 'bayarcash_secret', 'bayarcash_sandbox',
             'toyyibpay_key', 'toyyibpay_category', 'toyyibpay_sandbox',
+            'withdrawal_fee_store', 'withdrawal_fee_school',
         ];
 
         foreach ($keys as $key) {
