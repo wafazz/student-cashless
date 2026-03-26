@@ -39,17 +39,28 @@ class SubscriptionPaymentController extends Controller
         $package = $payment->package;
         $school = $payment->school;
 
-        // Start after current subscription ends, or now if expired/none
+        // Paid plans always start on 1st of next month
+        // If school has active sub, start 1st of month after it ends
         $currentEnd = $school->subscription_end;
         $hasActiveSub = $currentEnd && $currentEnd->isFuture();
+        $isTrial = $package->billing_cycle === 'trial';
 
-        $start = $hasActiveSub ? $currentEnd : now();
-        $end = $start->copy()->addDays($package->duration_days);
+        if ($isTrial) {
+            $start = now();
+            $end = now()->addDays($package->duration_days);
+        } else {
+            // Monthly/Yearly always starts 1st of next month
+            $baseDate = $hasActiveSub ? $currentEnd : now();
+            $start = $baseDate->copy()->startOfMonth()->addMonth(); // 1st of next month
+            $end = $package->billing_cycle === 'yearly'
+                ? $start->copy()->addYear()
+                : $start->copy()->addMonth();
+        }
 
         $school->update([
             'package_id' => $package->id,
             'subscription_fee' => $package->price,
-            'subscription_status' => $hasActiveSub ? $school->subscription_status : ($package->billing_cycle === 'trial' ? 'trial' : 'active'),
+            'subscription_status' => $hasActiveSub ? $school->subscription_status : ($isTrial ? 'trial' : 'active'),
             'subscription_start' => $hasActiveSub ? $school->subscription_start : $start,
             'subscription_end' => $end,
         ]);
@@ -60,9 +71,9 @@ class SubscriptionPaymentController extends Controller
             'approved_at' => now(),
         ]);
 
-        $msg = $hasActiveSub
-            ? "Approved! {$package->name} will start on {$start->format('d/m/Y')} (after current plan ends) until {$end->format('d/m/Y')}."
-            : "Approved! {$school->name} subscribed to {$package->name} until {$end->format('d/m/Y')}.";
+        $msg = $isTrial
+            ? "Approved! {$school->name} trial activated until {$end->format('d/m/Y')}."
+            : "Approved! {$package->name} starts {$start->format('1 M Y')} until {$end->format('d/m/Y')}.";
 
         return back()->with('success', $msg);
     }
