@@ -57,11 +57,25 @@ export default function Subscription({ school, packages, payments }: Props) {
             <div className={`rounded-2xl p-6 mb-6 ${isActive ? 'bg-gradient-to-br from-teal-500 to-teal-600 text-white' : 'bg-white border border-gray-200'}`}>
                 <p className={`text-sm ${isActive ? 'text-teal-100' : 'text-gray-500'}`}>Current Plan</p>
                 <p className={`text-2xl font-bold mt-1 ${isActive ? '' : 'text-gray-800'}`}>
-                    {school.package?.name || school.subscription_status === 'trial' ? 'Trial' : 'No Active Plan'}
+                    {school.package?.name ?? (school.subscription_status === 'trial' ? 'Trial' : 'No Active Plan')}
                 </p>
+                {school.subscription_status && (
+                    <span className={`inline-block mt-2 px-3 py-1 rounded-full text-xs font-medium ${
+                        school.subscription_status === 'active' ? 'bg-white/20 text-white' :
+                        school.subscription_status === 'trial' ? 'bg-amber-400/20 text-amber-100' :
+                        'bg-red-100 text-red-700'
+                    }`}>
+                        {school.subscription_status === 'active' ? 'Active' : school.subscription_status === 'trial' ? 'Trial' : 'Inactive'}
+                    </span>
+                )}
                 {school.subscription_end && (
                     <p className={`text-sm mt-2 ${isActive ? 'text-teal-200' : 'text-gray-500'}`}>
-                        {isActive ? 'Active' : 'Expired'} until {new Date(school.subscription_end).toLocaleDateString('ms-MY')}
+                        Until {new Date(school.subscription_end).toLocaleDateString('ms-MY')}
+                    </p>
+                )}
+                {school.subscription_fee > 0 && (
+                    <p className={`text-sm mt-1 ${isActive ? 'text-teal-200' : 'text-gray-400'}`}>
+                        RM {Number(school.subscription_fee).toFixed(2)}/{school.package?.billing_cycle === 'yearly' ? 'year' : 'month'}
                     </p>
                 )}
                 {!isActive && !hasPending && (
