@@ -53,12 +53,12 @@ export default function ParentLayout({ children, title }: { children: ReactNode;
                 )}
 
                 {/* Sidebar */}
-                <aside className={`fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-200 z-50 transform transition-transform lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-                    <div className="p-6 border-b border-gray-200">
+                <aside className={`fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-200 z-50 transform transition-transform lg:translate-x-0 flex flex-col ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+                    <div className="p-6 border-b border-gray-200 shrink-0">
                         <img src="/logo.png" alt="Student Cashless" className="max-w-[200px] mx-auto" />
                         <p className="text-xs text-gray-500 mt-2">Parent Portal</p>
                     </div>
-                    <nav className="p-4 space-y-1">
+                    <nav className="p-4 space-y-1 flex-1 overflow-y-auto">
                         {navItems.map((item) => (
                             <Link
                                 key={item.href}
@@ -75,7 +75,7 @@ export default function ParentLayout({ children, title }: { children: ReactNode;
                             </Link>
                         ))}
                     </nav>
-                    <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
+                    <div className="shrink-0 p-4 border-t border-gray-200">
                         <div className="text-sm text-gray-700 mb-3 px-4">{auth.user?.name}</div>
                         <Link
                             href="/logout"
