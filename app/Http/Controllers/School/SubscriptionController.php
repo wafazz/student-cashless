@@ -46,6 +46,15 @@ class SubscriptionController extends Controller
             'notes' => 'nullable|string|max:500',
         ]);
 
+        // Active paid subscription: can only renew within 7 days before expiry
+        $school = School::findOrFail($schoolId);
+        if (!$isTrial && $school->subscription_status === 'active' && $school->subscription_end) {
+            $daysLeft = now()->diffInDays($school->subscription_end, false);
+            if ($daysLeft > 7) {
+                return back()->with('error', 'You can only renew within 7 days before your subscription ends. (' . ceil($daysLeft) . ' days remaining)');
+            }
+        }
+
         // Trial can only be used once per school
         if ($isTrial) {
             $usedTrial = SubscriptionPayment::where('school_id', $schoolId)

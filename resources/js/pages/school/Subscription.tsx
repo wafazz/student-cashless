@@ -23,6 +23,12 @@ export default function Subscription({ school, packages, payments }: Props) {
     const isActive = school.subscription_status === 'active' || school.subscription_status === 'trial';
     const trialUsed = payments.some(p => p.package?.billing_cycle === 'trial' && (p.status === 'approved' || p.status === 'pending'));
 
+    const daysLeft = school.subscription_end
+        ? Math.ceil((new Date(school.subscription_end).getTime() - Date.now()) / 86400000)
+        : 0;
+    const isActivePaid = school.subscription_status === 'active' && daysLeft > 0;
+    const canRenew = !isActivePaid || daysLeft <= 7;
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         form.post('/school/subscription', {
@@ -34,6 +40,7 @@ export default function Subscription({ school, packages, payments }: Props) {
     const canSelect = (pkg: SubscriptionPackage) => {
         if (hasPending) return false;
         if (pkg.billing_cycle === 'trial' && trialUsed) return false;
+        if (pkg.billing_cycle !== 'trial' && !canRenew) return false;
         return true;
     };
 
@@ -104,6 +111,16 @@ export default function Subscription({ school, packages, payments }: Props) {
             {!isActive && !hasPending && (
                 <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6">
                     <p className="text-amber-800 font-medium text-sm">Subscribe to a plan below to activate your school.</p>
+                </div>
+            )}
+
+            {/* Renewal window notice */}
+            {isActivePaid && !canRenew && (
+                <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6">
+                    <p className="text-blue-800 text-sm">
+                        Renewal available <span className="font-bold">7 days</span> before subscription ends.
+                        You can renew from <span className="font-semibold">{new Date(new Date(school.subscription_end!).getTime() - 7 * 86400000).toLocaleDateString('ms-MY')}</span> ({daysLeft} days remaining).
+                    </p>
                 </div>
             )}
 
