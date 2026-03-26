@@ -16,8 +16,8 @@ export default function Dashboard({ canteen, todaySales, todayTransactions, rece
                 <div className="flex items-center justify-center min-h-[60vh]">
                     <div className="text-center">
                         <p className="text-6xl mb-4">🏪</p>
-                        <h2 className="text-xl font-bold text-gray-800 mb-2">No Canteen Assigned</h2>
-                        <p className="text-gray-500">Contact admin to assign a canteen to your account.</p>
+                        <h2 className="text-xl font-bold text-gray-800 mb-2">No Store Assigned</h2>
+                        <p className="text-gray-500">Contact admin to assign a store to your account.</p>
                     </div>
                 </div>
             </OperatorLayout>
@@ -28,7 +28,14 @@ export default function Dashboard({ canteen, todaySales, todayTransactions, rece
         <OperatorLayout title="Dashboard">
             <div className="flex items-center justify-between mb-6">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-800">{canteen.name}</h1>
+                    <div className="flex items-center gap-2">
+                        <h1 className="text-2xl font-bold text-gray-800">{canteen.name}</h1>
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                            canteen.type === 'koperasi' ? 'bg-purple-50 text-purple-700' : 'bg-green-50 text-green-700'
+                        }`}>
+                            {canteen.type === 'koperasi' ? 'Koperasi' : 'Kantin'}
+                        </span>
+                    </div>
                     <p className="text-sm text-gray-500">{canteen.school?.name}</p>
                 </div>
                 <Link

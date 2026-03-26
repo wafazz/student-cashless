@@ -1,59 +1,174 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# e-Kantin
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Cashless school payment system for canteens (kantin) and bookstores (koperasi). Built with Laravel 12, Inertia.js, React, and Tailwind CSS.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Multi-Role System
+- **Admin** — manage schools, operators, parents, transactions, invoices, reports
+- **Operator** — scan & charge, menu/product management, sales, refunds, staff management
+- **Cashier** — scan & charge, sales, refunds (assigned by operator)
+- **Parent** — manage children, top up wallets, view transactions, QR payments
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Store Types
+- **Kantin** (Canteen) — food & beverages
+- **Koperasi** (Bookstore) — books, stationery, school apparel
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Both share the same scan-charge-cart flow. UI adapts labels, placeholders, and icons based on store type.
 
-## Learning Laravel
+### Wallet System
+- **Student wallets** — managed by parents, daily spending limits
+- **Parent general wallet** — personal QR for direct purchases
+- **Wallet transfer** — parent wallet to child wallet (one-way)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+### Cart-Based Charging
+- Staff must select from registered items — no manual amount input
+- Multi-item cart with quantity controls
+- Realtime search/filter by item name or category
+- Auto-calculated totals and descriptions
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Payment Gateways
+- Bayarcash (FPX)
+- ToyyibPay (FPX)
+- Manual top-up
 
-## Laravel Sponsors
+### Other
+- School subscription & invoicing
+- Service fee management with waiver thresholds
+- Low balance notifications
+- PDF receipt generation
+- Student photo verification during scan
+- PWA support (offline page, manifest, service worker)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Tech Stack
 
-### Premium Partners
+| Layer | Technology |
+|-------|-----------|
+| Backend | Laravel 12, PHP 8.2+ |
+| Frontend | React 19, Inertia.js, Tailwind CSS 4 |
+| Mobile | React Native 0.84 (separate repo) |
+| Database | MySQL / MariaDB |
+| Auth | Laravel Sanctum (API), session (web) |
+| PDF | barryvdh/laravel-dompdf |
+| Charts | react-apexcharts |
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Requirements
 
-## Contributing
+- PHP 8.2+
+- Composer
+- Node.js 18+
+- MySQL 8.0+ / MariaDB 10.6+
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Installation
 
-## Code of Conduct
+### 1. Clone & install dependencies
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+git clone <repo-url> e-kantin
+cd e-kantin
+composer install
+npm install
+```
 
-## Security Vulnerabilities
+### 2. Environment setup
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+Edit `.env` with your database credentials:
+
+```
+DB_DATABASE=ekantin
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+### 3. Database
+
+```bash
+php artisan migrate --seed
+php artisan storage:link
+```
+
+### 4. Run
+
+```bash
+# Development
+npm run dev
+php artisan serve
+
+# Production build
+npm run build
+```
+
+Visit `http://localhost:8000`
+
+## Default Credentials
+
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | admin@ekantin.my | admin123 |
+| Operator | kiah@ekantin.my | password |
+| Operator | ahmad@ekantin.my | password |
+| Parent | siti@test.com | password |
+| Parent | abu@test.com | password |
+
+## API
+
+52+ RESTful API endpoints for mobile app integration. All protected routes use Bearer token auth (Sanctum).
+
+```
+POST /api/operator/login
+POST /api/parent/login
+POST /api/parent/register
+```
+
+Authenticated routes under `/api/operator/*` and `/api/parent/*`. See `routes/api.php` for full list.
+
+## Project Structure
+
+```
+app/
+  Http/Controllers/
+    Admin/          # School, operator, parent, transaction, report management
+    Operator/       # Scan, menu, sales, refund, staff controllers
+    Parent/         # Dashboard, children, topup, wallet, transactions
+    Api/            # Mobile API controllers
+    Payment/        # Bayarcash & ToyyibPay callbacks
+  Models/           # User, Student, School, Canteen, MenuItem, Transaction, etc.
+  Services/         # Payment gateway services, receipt generation
+
+resources/js/
+  layouts/          # AdminLayout, OperatorLayout, ParentLayout
+  pages/
+    admin/          # Dashboard, Schools, Operators, Transactions, Reports, etc.
+    operator/       # Dashboard, Scan, Menu, Sales, Refund, Staff
+    parent/         # Dashboard, Children, Wallet, Topup, Transactions, etc.
+  types/            # TypeScript interfaces (models.ts)
+
+routes/
+  web.php           # 70+ web routes
+  api.php           # 52+ API routes
+```
+
+## Deployment (VPS)
+
+```bash
+composer install --no-dev --optimize-autoloader
+npm install && npm run build
+cp .env.example .env  # configure for production
+php artisan key:generate
+php artisan migrate --seed
+php artisan storage:link
+php artisan config:cache
+php artisan route:cache
+php artisan view:cache
+```
+
+Set `APP_ENV=production`, `APP_DEBUG=false`, and configure your web server (Nginx/Apache) to point to the `public/` directory.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Proprietary. All rights reserved.

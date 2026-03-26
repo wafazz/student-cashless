@@ -8,6 +8,13 @@ class School extends Model
 {
     protected $fillable = [
         'name', 'address', 'phone', 'logo', 'status',
+        'subscription_fee', 'subscription_status', 'subscription_start', 'subscription_end',
+    ];
+
+    protected $casts = [
+        'subscription_fee' => 'decimal:2',
+        'subscription_start' => 'date',
+        'subscription_end' => 'date',
     ];
 
     public function students()
@@ -18,5 +25,10 @@ class School extends Model
     public function canteens()
     {
         return $this->hasMany(Canteen::class);
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
     }
 }

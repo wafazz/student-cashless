@@ -6,18 +6,38 @@ interface Props {
     students: Student[];
     totalBalance: number;
     todaySpent: number;
+    walletBalance: number;
     recentTransactions: Transaction[];
 }
 
-export default function Dashboard({ students, totalBalance, todaySpent, recentTransactions }: Props) {
+export default function Dashboard({ students, totalBalance, todaySpent, walletBalance, recentTransactions }: Props) {
     return (
         <ParentLayout title="Dashboard">
             <h1 className="text-2xl font-bold text-gray-800 mb-6">Dashboard</h1>
 
+            {/* General Wallet */}
+            <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-6 mb-6 text-white flex items-center justify-between">
+                <div>
+                    <p className="text-sm text-blue-200">My General Wallet</p>
+                    <p className="text-3xl font-bold mt-1">RM {Number(walletBalance).toFixed(2)}</p>
+                </div>
+                <div className="flex gap-2">
+                    <Link href="/parent/wallet/topup" className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl text-sm font-semibold transition-colors">
+                        + Top Up
+                    </Link>
+                    <Link href="/parent/wallet/qr" className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl text-sm font-semibold transition-colors">
+                        My QR
+                    </Link>
+                    <Link href="/parent/wallet" className="bg-white/20 hover:bg-white/30 px-4 py-2 rounded-xl text-sm font-semibold transition-colors">
+                        Transfer
+                    </Link>
+                </div>
+            </div>
+
             {/* Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                    <p className="text-sm text-gray-500">Total Balance</p>
+                    <p className="text-sm text-gray-500">Children's Total Balance</p>
                     <p className="text-3xl font-bold text-blue-600 mt-1">RM {Number(totalBalance).toFixed(2)}</p>
                 </div>
                 <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
@@ -91,7 +111,9 @@ export default function Dashboard({ students, totalBalance, todaySpent, recentTr
                                         {tx.student?.name} — {tx.description || tx.type}
                                     </p>
                                     <p className="text-xs text-gray-500">
-                                        {tx.canteen?.name || 'Wallet'} &middot; {new Date(tx.created_at).toLocaleString('ms-MY')}
+                                        {tx.canteen?.name || 'Wallet'}
+                                        {tx.canteen?.type === 'koperasi' && <span className="ml-1 text-purple-600">(Koperasi)</span>}
+                                        {' '}&middot; {new Date(tx.created_at).toLocaleString('ms-MY')}
                                     </p>
                                 </div>
                                 <span className={`text-sm font-semibold ${tx.type === 'topup' ? 'text-green-600' : 'text-red-500'}`}>

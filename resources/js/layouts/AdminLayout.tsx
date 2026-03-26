@@ -5,9 +5,12 @@ import { PageProps } from 'types/models';
 const navItems = [
     { label: 'Dashboard', href: '/admin/dashboard', icon: '🏠' },
     { label: 'Schools', href: '/admin/schools', icon: '🏫' },
-    { label: 'Operators', href: '/admin/operators', icon: '👤' },
+    { label: 'Registrations', href: '/admin/registrations', icon: '📝' },
+    { label: 'Invoices', href: '/admin/invoices', icon: '🧾' },
+    { label: 'Store Operators', href: '/admin/operators', icon: '👤' },
     { label: 'Parents', href: '/admin/parents', icon: '👪' },
     { label: 'Transactions', href: '/admin/transactions', icon: '📋' },
+    { label: 'Reports', href: '/admin/reports', icon: '📊' },
     { label: 'Settings', href: '/admin/settings', icon: '⚙️' },
 ];
 

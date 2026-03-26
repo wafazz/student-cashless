@@ -34,7 +34,7 @@ class LoginController extends Controller
             return match ($user->role) {
                 'admin' => redirect()->intended('/admin/dashboard'),
                 'parent' => redirect()->intended('/parent/dashboard'),
-                'operator' => redirect()->intended('/operator/dashboard'),
+                'operator', 'cashier' => redirect()->intended('/operator/dashboard'),
             };
         }
 

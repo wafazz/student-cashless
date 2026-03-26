@@ -7,7 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Canteen extends Model
 {
     protected $fillable = [
-        'school_id', 'operator_id', 'name', 'status',
+        'school_id', 'operator_id', 'name', 'type', 'status',
+        'contract_fee', 'contract_status', 'contract_start', 'contract_end', 'contract_notes',
+    ];
+
+    protected $casts = [
+        'contract_fee' => 'decimal:2',
+        'contract_start' => 'date',
+        'contract_end' => 'date',
     ];
 
     public function school()
@@ -28,5 +35,10 @@ class Canteen extends Model
     public function transactions()
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function staff()
+    {
+        return $this->hasMany(CanteenStaff::class);
     }
 }

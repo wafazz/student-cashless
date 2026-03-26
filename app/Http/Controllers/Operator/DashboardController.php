@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Operator;
 
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
+use App\Models\User;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -11,7 +12,7 @@ class DashboardController extends Controller
     public function index()
     {
         $user = auth()->user();
-        $canteen = $user->canteen;
+        $canteen = $user->getCanteenForWork();
 
         if (!$canteen) {
             return Inertia::render('operator/Dashboard', [
@@ -33,7 +34,16 @@ class DashboardController extends Controller
             ->with('student')
             ->latest('created_at')
             ->take(10)
-            ->get();
+            ->get()
+            ->map(function ($tx) {
+                if (!$tx->student && $tx->parent_id) {
+                    $parent = User::find($tx->parent_id);
+                    $tx->student = (object) [
+                        'name' => $parent ? $parent->name . ' (Parent)' : 'Unknown',
+                    ];
+                }
+                return $tx;
+            });
 
         return Inertia::render('operator/Dashboard', [
             'canteen' => $canteen->load('school'),

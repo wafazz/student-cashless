@@ -27,6 +27,7 @@ class DashboardController extends Controller
             'students' => $students,
             'totalBalance' => $totalBalance,
             'todaySpent' => $todaySpent,
+            'walletBalance' => (float) $user->wallet_balance,
             'recentTransactions' => $recentTransactions,
         ]);
     }

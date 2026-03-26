@@ -5,12 +5,15 @@ import { PageProps } from 'types/models';
 const navItems = [
     { label: 'Dashboard', href: '/parent/dashboard', icon: '🏠' },
     { label: 'Children', href: '/parent/children', icon: '👧' },
+    { label: 'My Wallet', href: '/parent/wallet', icon: '💳' },
     { label: 'Top Up', href: '/parent/topup', icon: '💰' },
     { label: 'History', href: '/parent/transactions', icon: '📋' },
+    { label: 'Notifications', href: '/parent/notifications', icon: '🔔' },
+    { label: 'Profile', href: '/parent/profile', icon: '👤' },
 ];
 
 export default function ParentLayout({ children, title }: { children: ReactNode; title: string }) {
-    const { auth, flash } = usePage().props as unknown as PageProps;
+    const { auth, flash, unreadNotifications } = usePage().props as unknown as PageProps;
     const [showFlash, setShowFlash] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -34,7 +37,12 @@ export default function ParentLayout({ children, title }: { children: ReactNode;
                         </svg>
                     </button>
                     <span className="font-bold text-blue-600">e-Kantin</span>
-                    <span className="text-sm text-gray-500">{auth.user?.name}</span>
+                    <div className="flex items-center gap-2">
+                        {unreadNotifications > 0 && (
+                            <span className="bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{unreadNotifications}</span>
+                        )}
+                        <span className="text-sm text-gray-500">{auth.user?.name}</span>
+                    </div>
                 </header>
 
                 {/* Sidebar Overlay */}

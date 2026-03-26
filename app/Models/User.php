@@ -5,14 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
         'name', 'email', 'phone', 'password', 'role', 'status',
+        'wallet_uuid', 'wallet_balance',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function ($user) {
+            if ($user->role === 'parent' && !$user->wallet_uuid) {
+                $user->wallet_uuid = (string) Str::uuid();
+            }
+        });
+    }
 
     protected $hidden = [
         'password', 'remember_token',
@@ -23,6 +35,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'wallet_balance' => 'decimal:2',
         ];
     }
 
@@ -34,5 +47,22 @@ class User extends Authenticatable
     public function canteen()
     {
         return $this->hasOne(Canteen::class, 'operator_id');
+    }
+
+    public function staffAssignment()
+    {
+        return $this->hasOne(CanteenStaff::class);
+    }
+
+    public function getCanteenForWork()
+    {
+        if ($this->role === 'operator') {
+            return $this->canteen;
+        }
+        if ($this->role === 'cashier') {
+            $assignment = $this->staffAssignment?->load('canteen');
+            return $assignment?->canteen;
+        }
+        return null;
     }
 }

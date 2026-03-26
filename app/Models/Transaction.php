@@ -9,7 +9,7 @@ class Transaction extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'student_id', 'canteen_id', 'operator_id', 'type',
+        'student_id', 'parent_id', 'canteen_id', 'operator_id', 'type',
         'amount', 'balance_before', 'balance_after',
         'description', 'reference_id', 'created_at',
     ];

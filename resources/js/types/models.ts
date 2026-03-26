@@ -3,7 +3,7 @@ export interface User {
     name: string;
     email: string;
     phone: string | null;
-    role: 'admin' | 'parent' | 'operator';
+    role: 'admin' | 'parent' | 'operator' | 'cashier';
     status: 'active' | 'inactive';
     email_verified_at: string | null;
     created_at: string;
@@ -17,6 +17,10 @@ export interface School {
     phone: string | null;
     logo: string | null;
     status: 'active' | 'inactive';
+    subscription_fee: number;
+    subscription_status: 'active' | 'inactive' | 'trial';
+    subscription_start: string | null;
+    subscription_end: string | null;
     created_at: string;
     updated_at: string;
     canteens?: Canteen[];
@@ -48,7 +52,13 @@ export interface Canteen {
     school_id: number;
     operator_id: number;
     name: string;
+    type: 'canteen' | 'koperasi';
     status: 'active' | 'inactive';
+    contract_fee: number;
+    contract_status: 'active' | 'expired' | 'terminated';
+    contract_start: string | null;
+    contract_end: string | null;
+    contract_notes: string | null;
     created_at: string;
     updated_at: string;
     school?: School;
@@ -89,6 +99,7 @@ export interface Topup {
     parent_id: number;
     student_id: number;
     amount: number;
+    service_fee: number;
     payment_method: 'fpx' | 'manual';
     gateway: string | null;
     gateway_ref: string | null;
@@ -96,6 +107,36 @@ export interface Topup {
     created_at: string;
     updated_at: string;
     student?: Student;
+}
+
+export interface Invoice {
+    id: number;
+    school_id: number;
+    invoice_number: string;
+    amount: number;
+    period_start: string;
+    period_end: string;
+    due_date: string;
+    status: 'unpaid' | 'paid' | 'overdue';
+    paid_at: string | null;
+    notes: string | null;
+    created_at: string;
+    school?: School;
+}
+
+export interface SchoolRegistration {
+    id: number;
+    school_name: string;
+    address: string | null;
+    school_phone: string | null;
+    contact_name: string;
+    contact_email: string;
+    contact_phone: string | null;
+    estimated_students: number | null;
+    notes: string | null;
+    status: 'pending' | 'approved' | 'rejected';
+    admin_notes: string | null;
+    created_at: string;
 }
 
 export interface PageProps {
@@ -106,4 +147,5 @@ export interface PageProps {
         success: string | null;
         error: string | null;
     };
+    unreadNotifications: number;
 }

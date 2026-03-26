@@ -1,29 +1,27 @@
 # e-Kantin — Session Memory
 
 ## Current Phase
-Phase 1 COMPLETE — Foundation scaffolded, all core pages built
+ALL COMPLETE + GENERAL WALLET + KOPERASI + CART-BASED CHARGING
 
-## What Was Done
-- Laravel 12 + Inertia + React 19 + TypeScript + Tailwind 4 scaffold
-- 9 migrations (users, schools, students, canteens, menu_items, transactions, topups, settings)
-- 8 models with relationships (User, School, Student, Canteen, MenuItem, Transaction, Topup, Setting)
-- Auth: Login/Register with role-based redirect (admin/parent/operator)
-- EnsureRole middleware
-- 4 layouts: AuthLayout, ParentLayout, OperatorLayout, AdminLayout
-- Parent pages: Dashboard, Children (CRUD), QR Code (view/print), Transactions (paginated)
-- Operator pages: Dashboard, Scan & Charge (QR scanner + quick-select menu)
-- Admin: placeholder Dashboard
-- DatabaseSeeder with 2 schools, 2 operators, 2 parents, 3 students, 16 menu items, 5 transactions
-- HandleInertiaRequests shares auth.user + flash messages
+## What Was Done (Session 7)
+- Koperasi module — full stack (web + API + mobile)
+- Cart-based charging (web + mobile):
+  - Staff MUST select from registered items/products — no manual amount input
+  - Multi-item cart with qty +/- controls
+  - Realtime search/filter for items (by name or category)
+  - Auto-calculated total from cart
+  - Cart description auto-generated (e.g. "Nasi Lemak, Milo x2")
+  - Charge button disabled until cart has items
 
-## Next Steps
-- Phase 2: Parent top up page
-- Phase 3: Operator sales report, menu management
-- Phase 4: FPX payment integration (Bayarcash/ToyyibPay)
-- Phase 5: Admin panel
+## Key Architecture
+- canteens.type enum: 'canteen' (default) | 'koperasi'
+- Same scan/charge/cart flow works for both types
+- Cart system: web uses useState cart array, mobile same pattern
+- Search: instant filter on name + category
+- No manual amount/description — everything derived from registered items
 
 ## Session Recap
-New project initialized 2026-03-17. Full Phase 1 complete in first session.
-Stack: Laravel 12 + Inertia + React + TS + Tailwind 4, MySQL `ekantin` port 3307.
-QR: Static UUID per student, html5-qrcode for scanning, qrcode.react for display.
-Wallet: lockForUpdate() in DB transaction, daily_limit + daily_spent tracking.
+Total: 52 API routes, 70+ web routes, 22 controllers, 37+ React pages, 10 RN screens.
+Roles: admin, parent, operator, cashier. Parent has general wallet + child wallets.
+Store types: canteen (kantin) and koperasi. Same operator/cashier flow for both.
+All platforms (web + API + mobile) fully support koperasi + cart-based charging.

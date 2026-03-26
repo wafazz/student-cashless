@@ -2,11 +2,16 @@ import { Head, Link, usePage } from '@inertiajs/react';
 import { ReactNode, useState, useEffect } from 'react';
 import { PageProps } from 'types/models';
 
-const navItems = [
+const sharedNavItems = [
     { label: 'Dashboard', href: '/operator/dashboard', icon: '🏠' },
     { label: 'Scan & Charge', href: '/operator/scan', icon: '📷' },
     { label: 'Sales', href: '/operator/sales', icon: '📊' },
-    { label: 'Menu', href: '/operator/menu', icon: '🍽️' },
+    { label: 'Refund', href: '/operator/refund', icon: '↩️' },
+];
+
+const ownerNavItems = [
+    { label: 'Products', href: '/operator/menu', icon: '📦' },
+    { label: 'Staff', href: '/operator/staff', icon: '👥' },
 ];
 
 export default function OperatorLayout({ children, title }: { children: ReactNode; title: string }) {
@@ -45,10 +50,10 @@ export default function OperatorLayout({ children, title }: { children: ReactNod
                 <aside className={`fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-200 z-50 transform transition-transform lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                     <div className="p-6 border-b border-gray-200">
                         <h1 className="text-xl font-bold text-green-600">e-Kantin</h1>
-                        <p className="text-xs text-gray-500 mt-1">Canteen Operator</p>
+                        <p className="text-xs text-gray-500 mt-1">{auth.user?.role === 'cashier' ? 'Cashier' : 'Store Owner'}</p>
                     </div>
                     <nav className="p-4 space-y-1">
-                        {navItems.map((item) => (
+                        {[...sharedNavItems, ...(auth.user?.role === 'operator' ? ownerNavItems : [])].map((item) => (
                             <Link
                                 key={item.href}
                                 href={item.href}

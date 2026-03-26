@@ -29,11 +29,19 @@ class ChildrenController extends Controller
             'ic_number' => 'nullable|string|max:20',
             'class_name' => 'nullable|string|max:100',
             'daily_limit' => 'nullable|numeric|min:0',
+            'photo' => 'required|image|mimes:jpg,jpeg,png|max:5120',
+        ], [
+            'photo.required' => 'Please upload your child\'s photo (head to waist, in school uniform).',
+            'photo.max' => 'Photo must not exceed 5MB.',
         ]);
 
-        auth()->user()->students()->create($request->only([
-            'name', 'school_id', 'ic_number', 'class_name', 'daily_limit',
-        ]));
+        $data = $request->only(['name', 'school_id', 'ic_number', 'class_name', 'daily_limit']);
+
+        if ($request->hasFile('photo')) {
+            $data['photo'] = $request->file('photo')->store('students', 'public');
+        }
+
+        auth()->user()->students()->create($data);
 
         return back()->with('success', 'Child added successfully.');
     }
@@ -50,11 +58,20 @@ class ChildrenController extends Controller
             'ic_number' => 'nullable|string|max:20',
             'class_name' => 'nullable|string|max:100',
             'daily_limit' => 'nullable|numeric|min:0',
+            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
         ]);
 
-        $student->update($request->only([
-            'name', 'school_id', 'ic_number', 'class_name', 'daily_limit',
-        ]));
+        $data = $request->only(['name', 'school_id', 'ic_number', 'class_name', 'daily_limit']);
+
+        if ($request->hasFile('photo')) {
+            // Delete old photo
+            if ($student->photo && \Storage::disk('public')->exists($student->photo)) {
+                \Storage::disk('public')->delete($student->photo);
+            }
+            $data['photo'] = $request->file('photo')->store('students', 'public');
+        }
+
+        $student->update($data);
 
         return back()->with('success', 'Child updated successfully.');
     }
