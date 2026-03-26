@@ -141,6 +141,8 @@ Route::prefix('school')->middleware(['auth', 'role:school'])->group(function () 
     Route::get('/school-fees/{schoolFee}', [\App\Http\Controllers\School\SchoolFeeController::class, 'show'])->name('school.school-fees.show');
     Route::put('/school-fees/{schoolFee}', [\App\Http\Controllers\School\SchoolFeeController::class, 'update'])->name('school.school-fees.update');
     Route::delete('/school-fees/{schoolFee}', [\App\Http\Controllers\School\SchoolFeeController::class, 'destroy'])->name('school.school-fees.destroy');
+    Route::get('/subscription', [\App\Http\Controllers\School\SubscriptionController::class, 'index'])->name('school.subscription');
+    Route::post('/subscription', [\App\Http\Controllers\School\SubscriptionController::class, 'subscribe'])->name('school.subscription.subscribe');
     Route::get('/reports', [\App\Http\Controllers\School\ReportController::class, 'index'])->name('school.reports');
     Route::get('/withdrawals', [\App\Http\Controllers\School\WithdrawalController::class, 'index'])->name('school.withdrawals');
     Route::post('/withdrawals/bank', [\App\Http\Controllers\School\WithdrawalController::class, 'updateBank'])->name('school.withdrawals.bank');
@@ -169,6 +171,9 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/school-users', [\App\Http\Controllers\Admin\PibgController::class, 'schoolUsers'])->name('admin.school-users');
     Route::post('/school-users', [\App\Http\Controllers\Admin\PibgController::class, 'storeSchoolUser'])->name('admin.school-users.store');
     Route::put('/school-users/{user}', [\App\Http\Controllers\Admin\PibgController::class, 'updateSchoolUser'])->name('admin.school-users.update');
+    Route::get('/subscription-payments', [\App\Http\Controllers\Admin\SubscriptionPaymentController::class, 'index'])->name('admin.subscription-payments');
+    Route::post('/subscription-payments/{payment}/approve', [\App\Http\Controllers\Admin\SubscriptionPaymentController::class, 'approve'])->name('admin.subscription-payments.approve');
+    Route::post('/subscription-payments/{payment}/reject', [\App\Http\Controllers\Admin\SubscriptionPaymentController::class, 'reject'])->name('admin.subscription-payments.reject');
     Route::get('/packages', [\App\Http\Controllers\Admin\PackageController::class, 'index'])->name('admin.packages');
     Route::post('/packages', [\App\Http\Controllers\Admin\PackageController::class, 'store'])->name('admin.packages.store');
     Route::put('/packages/{package}', [\App\Http\Controllers\Admin\PackageController::class, 'update'])->name('admin.packages.update');

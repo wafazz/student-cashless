@@ -8,6 +8,7 @@ const navItems = [
     { label: 'Classes', href: '/school/classes', icon: '📚' },
     { label: 'School Fees', href: '/school/school-fees', icon: '🧾' },
     { label: 'PIBG Fees', href: '/school/pibg-fees', icon: '💰' },
+    { label: 'Subscription', href: '/school/subscription', icon: '⭐' },
     { label: 'Reports', href: '/school/reports', icon: '📊' },
     { label: 'Withdrawals', href: '/school/withdrawals', icon: '🏦' },
 ];

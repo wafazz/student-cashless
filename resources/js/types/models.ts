@@ -240,6 +240,21 @@ export interface SubscriptionPackage {
     schools_count?: number;
 }
 
+export interface SubscriptionPayment {
+    id: number;
+    school_id: number;
+    package_id: number;
+    amount: number;
+    receipt_path: string;
+    notes: string | null;
+    status: 'pending' | 'approved' | 'rejected';
+    admin_notes: string | null;
+    approved_at: string | null;
+    created_at: string;
+    school?: School;
+    package?: SubscriptionPackage;
+}
+
 export interface Withdrawal {
     id: number;
     entity_type: 'store' | 'school';

@@ -13,6 +13,7 @@ const navItems = [
     { label: 'PIBG', href: '/admin/pibg', icon: '🏫' },
     { label: 'School Users', href: '/admin/school-users', icon: '🔑' },
     { label: 'Packages', href: '/admin/packages', icon: '📦' },
+    { label: 'Sub Payments', href: '/admin/subscription-payments', icon: '💳' },
     { label: 'Withdrawals', href: '/admin/withdrawals', icon: '🏦' },
     { label: 'Reports', href: '/admin/reports', icon: '📊' },
     { label: 'Settings', href: '/admin/settings', icon: '⚙️' },
