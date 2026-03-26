@@ -38,6 +38,11 @@ class ScanController extends Controller
         $student = Student::where('wallet_uuid', $uuid)->where('status', 'active')->with('school')->first();
 
         if ($student) {
+            $canteen = auth()->user()->getCanteenForWork();
+            $storeType = $canteen?->type ?? 'canteen';
+            $limitField = 'daily_limit_' . $storeType;
+            $spentField = 'daily_spent_' . $storeType;
+
             return response()->json([
                 'type' => 'student',
                 'id' => $student->id,
@@ -45,8 +50,8 @@ class ScanController extends Controller
                 'class_name' => $student->class_name,
                 'school' => $student->school->name,
                 'wallet_balance' => $student->wallet_balance,
-                'daily_limit' => $student->daily_limit,
-                'daily_spent' => $student->daily_spent,
+                'daily_limit' => $student->$limitField,
+                'daily_spent' => $student->$spentField,
                 'photo' => $student->photo ? asset('storage/' . $student->photo) : null,
             ]);
         }
@@ -104,6 +109,9 @@ class ScanController extends Controller
     {
         return DB::transaction(function () use ($request, $canteen, $amount) {
             $student = Student::lockForUpdate()->findOrFail($request->student_id);
+            $storeType = $canteen->type ?? 'canteen';
+            $limitField = 'daily_limit_' . $storeType;
+            $spentField = 'daily_spent_' . $storeType;
 
             if ($student->status !== 'active') {
                 return back()->with('error', 'Student account is inactive.');
@@ -113,14 +121,14 @@ class ScanController extends Controller
                 return back()->with('error', 'Insufficient balance. Current: RM' . number_format($student->wallet_balance, 2));
             }
 
-            if ($student->daily_limit !== null && ($student->daily_spent + $amount) > $student->daily_limit) {
-                $remaining = $student->daily_limit - $student->daily_spent;
+            if ($student->$limitField !== null && ($student->$spentField + $amount) > $student->$limitField) {
+                $remaining = $student->$limitField - $student->$spentField;
                 return back()->with('error', 'Daily limit exceeded. Remaining: RM' . number_format(max(0, $remaining), 2));
             }
 
             $balanceBefore = $student->wallet_balance;
             $student->wallet_balance -= $amount;
-            $student->daily_spent += $amount;
+            $student->$spentField += $amount;
             $student->save();
 
             Transaction::create([

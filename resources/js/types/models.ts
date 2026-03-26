@@ -36,8 +36,10 @@ export interface Student {
     class_name: string | null;
     wallet_uuid: string;
     wallet_balance: number;
-    daily_limit: number | null;
-    daily_spent: number;
+    daily_limit_canteen: number | null;
+    daily_limit_koperasi: number | null;
+    daily_spent_canteen: number;
+    daily_spent_koperasi: number;
     photo: string | null;
     status: 'active' | 'inactive';
     created_at: string;

@@ -37,7 +37,7 @@ export default function OperatorLayout({ children, title }: { children: ReactNod
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
                     </button>
-                    <span className="font-bold text-green-600">e-Kantin</span>
+                    <img src="/logo.png" alt="Student Cashless" className="h-12" />
                     <Link href="/operator/scan" className="bg-green-600 text-white px-3 py-1.5 rounded-lg text-sm font-medium">
                         Scan
                     </Link>
@@ -49,8 +49,8 @@ export default function OperatorLayout({ children, title }: { children: ReactNod
 
                 <aside className={`fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-200 z-50 transform transition-transform lg:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
                     <div className="p-6 border-b border-gray-200">
-                        <h1 className="text-xl font-bold text-green-600">e-Kantin</h1>
-                        <p className="text-xs text-gray-500 mt-1">{auth.user?.role === 'cashier' ? 'Cashier' : 'Store Owner'}</p>
+                        <img src="/logo.png" alt="Student Cashless" className="max-w-[200px] mx-auto" />
+                        <p className="text-xs text-gray-500 mt-2">{auth.user?.role === 'cashier' ? 'Cashier' : 'Store Owner'}</p>
                     </div>
                     <nav className="p-4 space-y-1">
                         {[...sharedNavItems, ...(auth.user?.role === 'operator' ? ownerNavItems : [])].map((item) => (

@@ -36,7 +36,7 @@ export default function SchoolRegister() {
             <Head title="Register Your School" />
             <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
                 <header className="px-6 py-4 flex items-center justify-between max-w-4xl mx-auto">
-                    <Link href="/" className="text-2xl font-bold text-blue-600">e-Kantin</Link>
+                    <Link href="/"><img src="/logo.png" alt="Student Cashless" className="max-w-[200px]" /></Link>
                     <Link href="/login" className="px-5 py-2 text-sm font-medium text-gray-700 hover:text-blue-600">
                         Log In
                     </Link>
@@ -45,7 +45,7 @@ export default function SchoolRegister() {
                 <div className="max-w-2xl mx-auto px-6 py-10">
                     <div className="text-center mb-8">
                         <h1 className="text-3xl font-bold text-gray-900">Register Your School</h1>
-                        <p className="text-gray-500 mt-2">Get started with e-Kantin cashless canteen system. Fill in your details and we'll get in touch.</p>
+                        <p className="text-gray-500 mt-2">Get started with Student Cashless system. Fill in your details and we'll get in touch.</p>
                     </div>
 
                     {showFlash && flash.success && (

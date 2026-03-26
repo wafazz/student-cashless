@@ -21,7 +21,7 @@ class DashboardController extends Controller
             ->take(10)
             ->get();
 
-        $todaySpent = $students->sum('daily_spent');
+        $todaySpent = $students->sum('daily_spent_canteen') + $students->sum('daily_spent_koperasi');
 
         return Inertia::render('parent/Dashboard', [
             'students' => $students,

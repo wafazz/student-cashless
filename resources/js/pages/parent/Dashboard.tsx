@@ -73,10 +73,11 @@ export default function Dashboard({ students, totalBalance, todaySpent, walletBa
                             <p className="text-2xl font-bold text-blue-600 mb-1">
                                 RM {Number(student.wallet_balance).toFixed(2)}
                             </p>
-                            {student.daily_limit && (
-                                <p className="text-xs text-gray-500">
-                                    Spent today: RM {Number(student.daily_spent).toFixed(2)} / RM {Number(student.daily_limit).toFixed(2)}
-                                </p>
+                            {(student.daily_limit_canteen || student.daily_limit_koperasi) && (
+                                <div className="text-xs text-gray-500 space-y-0.5">
+                                    {student.daily_limit_canteen && <p>Kantin: RM {Number(student.daily_spent_canteen).toFixed(2)} / RM {Number(student.daily_limit_canteen).toFixed(2)}</p>}
+                                    {student.daily_limit_koperasi && <p>Koperasi: RM {Number(student.daily_spent_koperasi).toFixed(2)} / RM {Number(student.daily_limit_koperasi).toFixed(2)}</p>}
+                                </div>
                             )}
                             <div className="flex gap-2 mt-4">
                                 <Link

@@ -133,12 +133,14 @@ class ParentApiController extends Controller
                 'school' => $s->school?->name,
                 'class_name' => $s->class_name,
                 'wallet_balance' => (float) $s->wallet_balance,
-                'daily_limit' => $s->daily_limit ? (float) $s->daily_limit : null,
-                'daily_spent' => (float) $s->daily_spent,
+                'daily_limit_canteen' => $s->daily_limit_canteen ? (float) $s->daily_limit_canteen : null,
+                'daily_limit_koperasi' => $s->daily_limit_koperasi ? (float) $s->daily_limit_koperasi : null,
+                'daily_spent_canteen' => (float) $s->daily_spent_canteen,
+                'daily_spent_koperasi' => (float) $s->daily_spent_koperasi,
                 'wallet_uuid' => $s->wallet_uuid,
             ]),
             'total_balance' => round($students->sum('wallet_balance') + $user->wallet_balance, 2),
-            'today_spent' => round($students->sum('daily_spent'), 2),
+            'today_spent' => round($students->sum('daily_spent_canteen') + $students->sum('daily_spent_koperasi'), 2),
             'recent_transactions' => $allTx,
         ]);
     }
@@ -159,8 +161,10 @@ class ParentApiController extends Controller
                 'ic_number' => $s->ic_number,
                 'wallet_balance' => (float) $s->wallet_balance,
                 'wallet_uuid' => $s->wallet_uuid,
-                'daily_limit' => $s->daily_limit ? (float) $s->daily_limit : null,
-                'daily_spent' => (float) $s->daily_spent,
+                'daily_limit_canteen' => $s->daily_limit_canteen ? (float) $s->daily_limit_canteen : null,
+                'daily_limit_koperasi' => $s->daily_limit_koperasi ? (float) $s->daily_limit_koperasi : null,
+                'daily_spent_canteen' => (float) $s->daily_spent_canteen,
+                'daily_spent_koperasi' => (float) $s->daily_spent_koperasi,
                 'status' => $s->status,
             ]),
         ]);
@@ -173,11 +177,12 @@ class ParentApiController extends Controller
             'school_id' => 'required|exists:schools,id',
             'ic_number' => 'nullable|string|max:20',
             'class_name' => 'nullable|string|max:100',
-            'daily_limit' => 'nullable|numeric|min:0',
+            'daily_limit_canteen' => 'nullable|numeric|min:0',
+            'daily_limit_koperasi' => 'nullable|numeric|min:0',
         ]);
 
         $student = $request->user()->students()->create($request->only([
-            'name', 'school_id', 'ic_number', 'class_name', 'daily_limit',
+            'name', 'school_id', 'ic_number', 'class_name', 'daily_limit_canteen', 'daily_limit_koperasi',
         ]));
 
         return response()->json([
@@ -201,10 +206,11 @@ class ParentApiController extends Controller
             'school_id' => 'required|exists:schools,id',
             'ic_number' => 'nullable|string|max:20',
             'class_name' => 'nullable|string|max:100',
-            'daily_limit' => 'nullable|numeric|min:0',
+            'daily_limit_canteen' => 'nullable|numeric|min:0',
+            'daily_limit_koperasi' => 'nullable|numeric|min:0',
         ]);
 
-        $student->update($request->only(['name', 'school_id', 'ic_number', 'class_name', 'daily_limit']));
+        $student->update($request->only(['name', 'school_id', 'ic_number', 'class_name', 'daily_limit_canteen', 'daily_limit_koperasi']));
 
         return response()->json(['message' => 'Child updated.']);
     }

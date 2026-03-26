@@ -28,14 +28,15 @@ class ChildrenController extends Controller
             'school_id' => 'required|exists:schools,id',
             'ic_number' => 'nullable|string|max:20',
             'class_name' => 'nullable|string|max:100',
-            'daily_limit' => 'nullable|numeric|min:0',
+            'daily_limit_canteen' => 'nullable|numeric|min:0',
+            'daily_limit_koperasi' => 'nullable|numeric|min:0',
             'photo' => 'required|image|mimes:jpg,jpeg,png|max:5120',
         ], [
             'photo.required' => 'Please upload your child\'s photo (head to waist, in school uniform).',
             'photo.max' => 'Photo must not exceed 5MB.',
         ]);
 
-        $data = $request->only(['name', 'school_id', 'ic_number', 'class_name', 'daily_limit']);
+        $data = $request->only(['name', 'school_id', 'ic_number', 'class_name', 'daily_limit_canteen', 'daily_limit_koperasi']);
 
         if ($request->hasFile('photo')) {
             $data['photo'] = $request->file('photo')->store('students', 'public');
@@ -57,11 +58,12 @@ class ChildrenController extends Controller
             'school_id' => 'required|exists:schools,id',
             'ic_number' => 'nullable|string|max:20',
             'class_name' => 'nullable|string|max:100',
-            'daily_limit' => 'nullable|numeric|min:0',
+            'daily_limit_canteen' => 'nullable|numeric|min:0',
+            'daily_limit_koperasi' => 'nullable|numeric|min:0',
             'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
         ]);
 
-        $data = $request->only(['name', 'school_id', 'ic_number', 'class_name', 'daily_limit']);
+        $data = $request->only(['name', 'school_id', 'ic_number', 'class_name', 'daily_limit_canteen', 'daily_limit_koperasi']);
 
         if ($request->hasFile('photo')) {
             // Delete old photo

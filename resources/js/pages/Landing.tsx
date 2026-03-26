@@ -3,11 +3,11 @@ import { Head, Link } from '@inertiajs/react';
 export default function Landing() {
     return (
         <>
-            <Head title="Cashless Canteen System" />
+            <Head title="Student Cashless - Cashless School Payment System" />
             <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
                 {/* Header */}
                 <header className="px-6 py-4 flex items-center justify-between max-w-6xl mx-auto">
-                    <h1 className="text-2xl font-bold text-blue-600">e-Kantin</h1>
+                    <img src="/logo.png" alt="Student Cashless" className="max-w-[200px]" />
                     <div className="flex gap-3">
                         <Link href="/login" className="px-5 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors">
                             Log In
@@ -21,15 +21,15 @@ export default function Landing() {
                 {/* Hero */}
                 <section className="px-6 py-20 max-w-6xl mx-auto text-center">
                     <div className="inline-block bg-blue-100 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full mb-6">
-                        Cashless Canteen Payment
+                        Cashless School Payment
                     </div>
                     <h2 className="text-4xl sm:text-5xl font-bold text-gray-900 mb-6 leading-tight">
                         No Cash, No Worry.<br />
                         <span className="text-blue-600">Just Scan & Pay.</span>
                     </h2>
                     <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-10">
-                        e-Kantin is a cashless payment system for school canteens. Parents top up wallets,
-                        students show QR codes, and canteen operators scan to charge. Simple, safe, and transparent.
+                        Student Cashless is a cashless payment system for school canteens and koperasi. Parents top up wallets,
+                        students show QR codes, and store operators scan to charge. Simple, safe, and transparent.
                     </p>
                     <div className="flex gap-4 justify-center flex-wrap">
                         <Link href="/register" className="px-8 py-4 bg-blue-600 text-white rounded-2xl font-semibold text-lg hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200">
@@ -62,8 +62,8 @@ export default function Landing() {
                         />
                         <StepCard
                             step="3"
-                            title="Canteen Scans & Charges"
-                            description="Operator scans the QR, enters the amount, and the wallet is instantly debited."
+                            title="Store Scans & Charges"
+                            description="Operator scans the QR, selects items from the menu, and the wallet is instantly debited."
                             icon="✅"
                         />
                     </div>
@@ -88,7 +88,7 @@ export default function Landing() {
 
                 {/* Footer */}
                 <footer className="px-6 py-8 text-center text-sm text-gray-400 border-t border-gray-100">
-                    <p>&copy; {new Date().getFullYear()} e-Kantin. Cashless Canteen Payment System.</p>
+                    <p>&copy; {new Date().getFullYear()} Student Cashless. Cashless School Payment System.</p>
                 </footer>
             </div>
         </>

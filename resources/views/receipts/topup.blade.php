@@ -16,7 +16,7 @@
 </head>
 <body>
     <div class="header">
-        <h1>e-Kantin</h1>
+        <h1>Student Cashless</h1>
         <p>Top Up Receipt</p>
     </div>
 
@@ -36,7 +36,7 @@
 
     <div class="footer">
         <p>This is a computer-generated receipt. No signature required.</p>
-        <p>e-Kantin Cashless Canteen System</p>
+        <p>Student Cashless - Cashless School Payment System</p>
     </div>
 </body>
 </html>

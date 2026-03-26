@@ -1,7 +1,7 @@
 {
-    "name": "e-Kantin",
-    "short_name": "e-Kantin",
-    "description": "Cashless Canteen Payment System",
+    "name": "Student Cashless",
+    "short_name": "Student Cashless",
+    "description": "Cashless School Payment System",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#f9fafb",

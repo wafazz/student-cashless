@@ -10,7 +10,7 @@ router.on('start', () => NProgress.start());
 router.on('finish', () => NProgress.done());
 
 createInertiaApp({
-    title: (title) => title ? `${title} - e-Kantin` : 'e-Kantin',
+    title: (title) => title ? `${title} - Student Cashless` : 'Student Cashless',
     resolve: (name) =>
         resolvePageComponent(`./pages/${name}.tsx`, import.meta.glob('./pages/**/*.tsx')),
     setup({ el, App, props }) {

@@ -179,6 +179,11 @@ class OperatorApiController extends Controller
         $student = Student::where('wallet_uuid', $uuid)->where('status', 'active')->with('school:id,name')->first();
 
         if ($student) {
+            $canteen = $request->user()->getCanteenForWork();
+            $storeType = $canteen?->type ?? 'canteen';
+            $limitField = 'daily_limit_' . $storeType;
+            $spentField = 'daily_spent_' . $storeType;
+
             return response()->json([
                 'type' => 'student',
                 'id' => $student->id,
@@ -186,8 +191,8 @@ class OperatorApiController extends Controller
                 'class_name' => $student->class_name,
                 'school' => $student->school?->name,
                 'wallet_balance' => (float) $student->wallet_balance,
-                'daily_limit' => $student->daily_limit ? (float) $student->daily_limit : null,
-                'daily_spent' => (float) $student->daily_spent,
+                'daily_limit' => $student->$limitField ? (float) $student->$limitField : null,
+                'daily_spent' => (float) $student->$spentField,
                 'photo' => $student->photo ? asset('storage/' . $student->photo) : null,
             ]);
         }
@@ -274,6 +279,9 @@ class OperatorApiController extends Controller
         // Student wallet charge
         return DB::transaction(function () use ($request, $canteen, $amount) {
             $student = Student::lockForUpdate()->findOrFail($request->student_id);
+            $storeType = $canteen->type ?? 'canteen';
+            $limitField = 'daily_limit_' . $storeType;
+            $spentField = 'daily_spent_' . $storeType;
 
             if ($student->status !== 'active') {
                 return response()->json(['message' => 'Student account is inactive.'], 422);
@@ -286,19 +294,19 @@ class OperatorApiController extends Controller
                 ], 422);
             }
 
-            if ($student->daily_limit !== null && ($student->daily_spent + $amount) > $student->daily_limit) {
-                $remaining = max(0, $student->daily_limit - $student->daily_spent);
+            if ($student->$limitField !== null && ($student->$spentField + $amount) > $student->$limitField) {
+                $remaining = max(0, $student->$limitField - $student->$spentField);
                 return response()->json([
                     'message' => 'Daily limit exceeded.',
-                    'daily_limit' => (float) $student->daily_limit,
-                    'daily_spent' => (float) $student->daily_spent,
+                    'daily_limit' => (float) $student->$limitField,
+                    'daily_spent' => (float) $student->$spentField,
                     'remaining' => round($remaining, 2),
                 ], 422);
             }
 
             $balanceBefore = $student->wallet_balance;
             $student->wallet_balance -= $amount;
-            $student->daily_spent += $amount;
+            $student->$spentField += $amount;
             $student->save();
 
             $tx = Transaction::create([
@@ -554,10 +562,12 @@ class OperatorApiController extends Controller
         // Student wallet refund
         return DB::transaction(function () use ($originalTx, $request) {
             $student = Student::lockForUpdate()->findOrFail($originalTx->student_id);
+            $canteen = \App\Models\Canteen::find($originalTx->canteen_id);
+            $spentField = 'daily_spent_' . ($canteen->type ?? 'canteen');
 
             $balanceBefore = $student->wallet_balance;
             $student->wallet_balance += $originalTx->amount;
-            $student->daily_spent = max(0, $student->daily_spent - $originalTx->amount);
+            $student->$spentField = max(0, $student->$spentField - $originalTx->amount);
             $student->save();
 
             Transaction::create([

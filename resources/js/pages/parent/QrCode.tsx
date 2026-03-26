@@ -22,7 +22,7 @@ export default function QrCode({ student }: Props) {
                 <h2 style="margin-bottom:5px;">${student.name}</h2>
                 <p style="color:#666;margin-top:0;">${student.class_name || ''} &middot; ${student.school?.name || ''}</p>
                 ${qrRef.current.innerHTML}
-                <p style="font-size:12px;color:#999;margin-top:20px;">e-Kantin Cashless Payment</p>
+                <p style="font-size:12px;color:#999;margin-top:20px;">Student Cashless Payment</p>
             </body>
             </html>
         `);

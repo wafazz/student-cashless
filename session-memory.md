@@ -1,27 +1,25 @@
-# e-Kantin — Session Memory
+# e-Kantin (Student Cashless) — Session Memory
 
 ## Current Phase
-ALL COMPLETE + GENERAL WALLET + KOPERASI + CART-BASED CHARGING
+ALL COMPLETE + GENERAL WALLET + KOPERASI + CART-BASED CHARGING + REBRANDING
 
 ## What Was Done (Session 7)
 - Koperasi module — full stack (web + API + mobile)
-- Cart-based charging (web + mobile):
-  - Staff MUST select from registered items/products — no manual amount input
-  - Multi-item cart with qty +/- controls
-  - Realtime search/filter for items (by name or category)
-  - Auto-calculated total from cart
-  - Cart description auto-generated (e.g. "Nasi Lemak, Milo x2")
-  - Charge button disabled until cart has items
+- Cart-based charging (web + mobile) — no manual input, must select registered items
+- Realtime item search/filter by name or category
+- Rebranding: "e-Kantin" → "Student Cashless" across all platforms
+- Logo integration: /public/logo.png (max-w-200px) on login, sidebars, landing, register
+- Updated: receipts, PWA manifest, offline page, QR print, browser tabs
+- Git pushed to github.com/wafazz/student-cashless
 
 ## Key Architecture
-- canteens.type enum: 'canteen' (default) | 'koperasi'
-- Same scan/charge/cart flow works for both types
-- Cart system: web uses useState cart array, mobile same pattern
+- canteens.type enum: 'canteen' | 'koperasi'
+- Cart system: must select from registered items, no manual amount
 - Search: instant filter on name + category
-- No manual amount/description — everything derived from registered items
+- Logo: /public/logo.png, max-w-[200px] mx-auto
 
 ## Session Recap
 Total: 52 API routes, 70+ web routes, 22 controllers, 37+ React pages, 10 RN screens.
 Roles: admin, parent, operator, cashier. Parent has general wallet + child wallets.
-Store types: canteen (kantin) and koperasi. Same operator/cashier flow for both.
-All platforms (web + API + mobile) fully support koperasi + cart-based charging.
+Store types: canteen (kantin) and koperasi. All platforms support both.
+Repo: github.com/wafazz/student-cashless

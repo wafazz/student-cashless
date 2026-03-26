@@ -9,14 +9,18 @@ class Student extends Model
 {
     protected $fillable = [
         'parent_id', 'school_id', 'name', 'ic_number', 'class_name',
-        'wallet_uuid', 'wallet_balance', 'daily_limit', 'daily_spent',
+        'wallet_uuid', 'wallet_balance',
+        'daily_limit_canteen', 'daily_limit_koperasi',
+        'daily_spent_canteen', 'daily_spent_koperasi',
         'photo', 'status',
     ];
 
     protected $casts = [
         'wallet_balance' => 'decimal:2',
-        'daily_limit' => 'decimal:2',
-        'daily_spent' => 'decimal:2',
+        'daily_limit_canteen' => 'decimal:2',
+        'daily_limit_koperasi' => 'decimal:2',
+        'daily_spent_canteen' => 'decimal:2',
+        'daily_spent_koperasi' => 'decimal:2',
     ];
 
     protected static function booted(): void

@@ -89,10 +89,12 @@ class RefundController extends Controller
     {
         return DB::transaction(function () use ($originalTx, $request) {
             $student = Student::lockForUpdate()->findOrFail($originalTx->student_id);
+            $canteen = \App\Models\Canteen::find($originalTx->canteen_id);
+            $spentField = 'daily_spent_' . ($canteen->type ?? 'canteen');
 
             $balanceBefore = $student->wallet_balance;
             $student->wallet_balance += $originalTx->amount;
-            $student->daily_spent = max(0, $student->daily_spent - $originalTx->amount);
+            $student->$spentField = max(0, $student->$spentField - $originalTx->amount);
             $student->save();
 
             Transaction::create([

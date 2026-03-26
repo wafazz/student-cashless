@@ -105,7 +105,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'Muhammad Aiman',
             'class_name' => '3 Bestari',
             'wallet_balance' => 50.00,
-            'daily_limit' => 10.00,
+            'daily_limit_canteen' => 10.00,
+            'daily_limit_koperasi' => 20.00,
         ]);
 
         $student2 = Student::create([
@@ -114,7 +115,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'Nur Aisyah',
             'class_name' => '5 Cemerlang',
             'wallet_balance' => 30.00,
-            'daily_limit' => 15.00,
+            'daily_limit_canteen' => 15.00,
+            'daily_limit_koperasi' => 30.00,
         ]);
 
         $student3 = Student::create([
@@ -123,7 +125,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'Ahmad Danial',
             'class_name' => '4 Jaya',
             'wallet_balance' => 25.00,
-            'daily_limit' => 8.00,
+            'daily_limit_canteen' => 8.00,
+            'daily_limit_koperasi' => 15.00,
         ]);
 
         // Sample Transactions

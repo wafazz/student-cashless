@@ -21,7 +21,8 @@ export default function Children({ students, schools }: Props) {
         school_id: '',
         ic_number: '',
         class_name: '',
-        daily_limit: '',
+        daily_limit_canteen: '',
+        daily_limit_koperasi: '',
         photo: null as File | null,
     });
 
@@ -30,7 +31,8 @@ export default function Children({ students, schools }: Props) {
         school_id: '',
         ic_number: '',
         class_name: '',
-        daily_limit: '',
+        daily_limit_canteen: '',
+        daily_limit_koperasi: '',
         photo: null as File | null,
     });
 
@@ -54,7 +56,8 @@ export default function Children({ students, schools }: Props) {
             school_id: String(student.school_id),
             ic_number: student.ic_number || '',
             class_name: student.class_name || '',
-            daily_limit: student.daily_limit ? String(student.daily_limit) : '',
+            daily_limit_canteen: student.daily_limit_canteen ? String(student.daily_limit_canteen) : '',
+            daily_limit_koperasi: student.daily_limit_koperasi ? String(student.daily_limit_koperasi) : '',
             photo: null,
         });
     };
@@ -161,9 +164,14 @@ export default function Children({ students, schools }: Props) {
                                     className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="e.g. 3 Bestari" />
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Daily Limit (RM)</label>
-                                <input type="number" step="0.50" min="0" value={form.data.daily_limit} onChange={e => form.setData('daily_limit', e.target.value)}
-                                    className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Leave empty for no limit" />
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Kantin Limit (RM/day)</label>
+                                <input type="number" step="0.50" min="0" value={form.data.daily_limit_canteen} onChange={e => form.setData('daily_limit_canteen', e.target.value)}
+                                    className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="No limit" />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Koperasi Limit (RM/day)</label>
+                                <input type="number" step="0.50" min="0" value={form.data.daily_limit_koperasi} onChange={e => form.setData('daily_limit_koperasi', e.target.value)}
+                                    className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="No limit" />
                             </div>
                             <div className="flex items-end">
                                 <button type="submit" disabled={form.processing}
@@ -230,9 +238,14 @@ export default function Children({ students, schools }: Props) {
                                                 className="w-full px-4 py-2.5 border border-gray-300 rounded-xl outline-none" />
                                         </div>
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-1">Daily Limit (RM)</label>
-                                            <input type="number" step="0.50" min="0" value={editForm.data.daily_limit} onChange={e => editForm.setData('daily_limit', e.target.value)}
-                                                className="w-full px-4 py-2.5 border border-gray-300 rounded-xl outline-none" />
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Kantin Limit (RM/day)</label>
+                                            <input type="number" step="0.50" min="0" value={editForm.data.daily_limit_canteen} onChange={e => editForm.setData('daily_limit_canteen', e.target.value)}
+                                                className="w-full px-4 py-2.5 border border-gray-300 rounded-xl outline-none" placeholder="No limit" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-sm font-medium text-gray-700 mb-1">Koperasi Limit (RM/day)</label>
+                                            <input type="number" step="0.50" min="0" value={editForm.data.daily_limit_koperasi} onChange={e => editForm.setData('daily_limit_koperasi', e.target.value)}
+                                                className="w-full px-4 py-2.5 border border-gray-300 rounded-xl outline-none" placeholder="No limit" />
                                         </div>
                                         <div className="flex items-end gap-2">
                                             <button type="submit" disabled={editForm.processing} className="bg-blue-600 text-white px-4 py-2.5 rounded-xl text-sm disabled:opacity-50">Save</button>
@@ -260,10 +273,11 @@ export default function Children({ students, schools }: Props) {
                                         <p className="text-lg font-bold text-blue-600 mt-1">
                                             RM {Number(student.wallet_balance).toFixed(2)}
                                         </p>
-                                        {student.daily_limit && (
-                                            <p className="text-xs text-gray-500">
-                                                Daily limit: RM {Number(student.daily_limit).toFixed(2)}
-                                            </p>
+                                        {(student.daily_limit_canteen || student.daily_limit_koperasi) && (
+                                            <div className="text-xs text-gray-500 mt-1 space-y-0.5">
+                                                {student.daily_limit_canteen && <p>Kantin: RM {Number(student.daily_limit_canteen).toFixed(2)}/day (spent: RM {Number(student.daily_spent_canteen).toFixed(2)})</p>}
+                                                {student.daily_limit_koperasi && <p>Koperasi: RM {Number(student.daily_limit_koperasi).toFixed(2)}/day (spent: RM {Number(student.daily_spent_koperasi).toFixed(2)})</p>}
+                                            </div>
                                         )}
                                     </div>
                                     <div className="flex gap-2 flex-shrink-0">
