@@ -5,6 +5,7 @@ interface Props {
     stats: {
         totalStudents: number;
         totalParents: number;
+        totalStores: number;
         activeFees: number;
         totalExpected: number;
         totalPaid: number;
@@ -24,8 +25,8 @@ export default function Dashboard({ stats, recentPayments }: Props) {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                 <StatCard label="Students" value={stats.totalStudents} color="blue" />
                 <StatCard label="Families" value={stats.totalParents} color="teal" />
+                <StatCard label="Stores" value={stats.totalStores} color="green" />
                 <StatCard label="Active Fees" value={stats.activeFees} color="indigo" />
-                <StatCard label="Collection Rate" value={`${progress}%`} color="green" />
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">

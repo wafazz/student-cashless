@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\School;
 
 use App\Http\Controllers\Controller;
+use App\Models\Canteen;
 use App\Models\PibgFee;
 use App\Models\PibgFeeParent;
 use App\Models\Student;
@@ -16,6 +17,7 @@ class DashboardController extends Controller
 
         $totalStudents = Student::where('school_id', $schoolId)->where('status', 'active')->count();
         $totalParents = Student::where('school_id', $schoolId)->distinct()->count('parent_id');
+        $totalStores = Canteen::where('school_id', $schoolId)->where('status', 'active')->count();
         $activeFees = PibgFee::where('school_id', $schoolId)->where('status', 'active')->count();
 
         $totalExpected = PibgFeeParent::where('school_id', $schoolId)
@@ -43,6 +45,7 @@ class DashboardController extends Controller
             'stats' => [
                 'totalStudents' => $totalStudents,
                 'totalParents' => $totalParents,
+                'totalStores' => $totalStores,
                 'activeFees' => $activeFees,
                 'totalExpected' => $totalExpected,
                 'totalPaid' => $totalPaid,

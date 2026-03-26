@@ -122,6 +122,9 @@ Route::prefix('school')->middleware(['auth', 'role:school'])->group(function () 
     Route::put('/pibg-fees/{pibgFee}', [\App\Http\Controllers\School\PibgFeeController::class, 'update'])->name('school.pibg-fees.update');
     Route::delete('/pibg-fees/{pibgFee}', [\App\Http\Controllers\School\PibgFeeController::class, 'destroy'])->name('school.pibg-fees.destroy');
     Route::post('/pibg-fees/{pibgFee}/reassign', [\App\Http\Controllers\School\PibgFeeController::class, 'reassign'])->name('school.pibg-fees.reassign');
+    Route::get('/stores', [\App\Http\Controllers\School\StoreController::class, 'index'])->name('school.stores');
+    Route::post('/stores', [\App\Http\Controllers\School\StoreController::class, 'store'])->name('school.stores.store');
+    Route::put('/stores/{canteen}', [\App\Http\Controllers\School\StoreController::class, 'update'])->name('school.stores.update');
     Route::get('/classes', [\App\Http\Controllers\School\ClassController::class, 'index'])->name('school.classes');
     Route::post('/classes', [\App\Http\Controllers\School\ClassController::class, 'store'])->name('school.classes.store');
     Route::put('/classes/{schoolClass}', [\App\Http\Controllers\School\ClassController::class, 'update'])->name('school.classes.update');

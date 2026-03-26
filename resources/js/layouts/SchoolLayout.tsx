@@ -4,6 +4,7 @@ import { PageProps } from 'types/models';
 
 const navItems = [
     { label: 'Dashboard', href: '/school/dashboard', icon: '🏠' },
+    { label: 'Stores', href: '/school/stores', icon: '🏪' },
     { label: 'Classes', href: '/school/classes', icon: '📚' },
     { label: 'School Fees', href: '/school/school-fees', icon: '🧾' },
     { label: 'PIBG Fees', href: '/school/pibg-fees', icon: '💰' },
