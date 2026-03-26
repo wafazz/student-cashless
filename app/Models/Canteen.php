@@ -9,6 +9,7 @@ class Canteen extends Model
     protected $fillable = [
         'school_id', 'operator_id', 'name', 'type', 'status',
         'contract_fee', 'contract_status', 'contract_start', 'contract_end', 'contract_notes',
+        'bank_name', 'bank_account', 'bank_holder',
     ];
 
     protected $casts = [

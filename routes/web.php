@@ -102,6 +102,13 @@ Route::prefix('operator')->middleware(['auth', 'role:operator,cashier', 'subscri
     Route::post('/refund', [RefundController::class, 'store'])->name('operator.refund.store');
 });
 
+// Operator withdrawal (shared by operator & cashier)
+Route::prefix('operator')->middleware(['auth', 'role:operator,cashier'])->group(function () {
+    Route::get('/withdrawals', [\App\Http\Controllers\Operator\WithdrawalController::class, 'index'])->name('operator.withdrawals');
+    Route::post('/withdrawals/bank', [\App\Http\Controllers\Operator\WithdrawalController::class, 'updateBank'])->name('operator.withdrawals.bank');
+    Route::post('/withdrawals/request', [\App\Http\Controllers\Operator\WithdrawalController::class, 'request'])->name('operator.withdrawals.request');
+});
+
 // Operator-only routes (menu, staff management)
 Route::prefix('operator')->middleware(['auth', 'role:operator', 'subscription'])->group(function () {
     Route::get('/menu', [MenuController::class, 'index'])->name('operator.menu');
@@ -135,6 +142,9 @@ Route::prefix('school')->middleware(['auth', 'role:school'])->group(function () 
     Route::put('/school-fees/{schoolFee}', [\App\Http\Controllers\School\SchoolFeeController::class, 'update'])->name('school.school-fees.update');
     Route::delete('/school-fees/{schoolFee}', [\App\Http\Controllers\School\SchoolFeeController::class, 'destroy'])->name('school.school-fees.destroy');
     Route::get('/reports', [\App\Http\Controllers\School\ReportController::class, 'index'])->name('school.reports');
+    Route::get('/withdrawals', [\App\Http\Controllers\School\WithdrawalController::class, 'index'])->name('school.withdrawals');
+    Route::post('/withdrawals/bank', [\App\Http\Controllers\School\WithdrawalController::class, 'updateBank'])->name('school.withdrawals.bank');
+    Route::post('/withdrawals/request', [\App\Http\Controllers\School\WithdrawalController::class, 'request'])->name('school.withdrawals.request');
 });
 
 // Admin Routes
@@ -159,6 +169,10 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/school-users', [\App\Http\Controllers\Admin\PibgController::class, 'schoolUsers'])->name('admin.school-users');
     Route::post('/school-users', [\App\Http\Controllers\Admin\PibgController::class, 'storeSchoolUser'])->name('admin.school-users.store');
     Route::put('/school-users/{user}', [\App\Http\Controllers\Admin\PibgController::class, 'updateSchoolUser'])->name('admin.school-users.update');
+    Route::get('/withdrawals', [\App\Http\Controllers\Admin\WithdrawalController::class, 'index'])->name('admin.withdrawals');
+    Route::post('/withdrawals/{withdrawal}/approve', [\App\Http\Controllers\Admin\WithdrawalController::class, 'approve'])->name('admin.withdrawals.approve');
+    Route::post('/withdrawals/{withdrawal}/paid', [\App\Http\Controllers\Admin\WithdrawalController::class, 'markPaid'])->name('admin.withdrawals.paid');
+    Route::post('/withdrawals/{withdrawal}/reject', [\App\Http\Controllers\Admin\WithdrawalController::class, 'reject'])->name('admin.withdrawals.reject');
 });
 
 // Payment Callbacks (CSRF exempt via bootstrap/app.php)

@@ -15,6 +15,7 @@ class User extends Authenticatable
     protected $fillable = [
         'name', 'email', 'phone', 'password', 'role', 'school_id', 'status',
         'wallet_uuid', 'wallet_balance',
+        'bank_name', 'bank_account', 'bank_holder',
     ];
 
     protected static function booted(): void

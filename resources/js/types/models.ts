@@ -65,6 +65,9 @@ export interface Canteen {
     contract_start: string | null;
     contract_end: string | null;
     contract_notes: string | null;
+    bank_name: string | null;
+    bank_account: string | null;
+    bank_holder: string | null;
     created_at: string;
     updated_at: string;
     school?: School;
@@ -219,6 +222,25 @@ export interface PibgFeeParent {
     fee?: PibgFee;
     parent?: User;
     school?: School;
+}
+
+export interface Withdrawal {
+    id: number;
+    entity_type: 'store' | 'school';
+    entity_id: number;
+    entity_name: string;
+    amount: number;
+    platform_fee: number;
+    net_amount: number;
+    bank_name: string;
+    bank_account: string;
+    bank_holder: string;
+    status: 'pending' | 'approved' | 'paid' | 'rejected';
+    requested_at: string;
+    approved_at: string | null;
+    paid_at: string | null;
+    payment_reference: string | null;
+    admin_notes: string | null;
 }
 
 export interface PageProps {

@@ -9,6 +9,7 @@ const navItems = [
     { label: 'School Fees', href: '/school/school-fees', icon: '🧾' },
     { label: 'PIBG Fees', href: '/school/pibg-fees', icon: '💰' },
     { label: 'Reports', href: '/school/reports', icon: '📊' },
+    { label: 'Withdrawals', href: '/school/withdrawals', icon: '🏦' },
 ];
 
 export default function SchoolLayout({ children, title }: { children: ReactNode; title: string }) {

@@ -7,6 +7,7 @@ const sharedNavItems = [
     { label: 'Scan & Charge', href: '/operator/scan', icon: '📷' },
     { label: 'Sales', href: '/operator/sales', icon: '📊' },
     { label: 'Refund', href: '/operator/refund', icon: '↩️' },
+    { label: 'Withdrawals', href: '/operator/withdrawals', icon: '🏦' },
 ];
 
 const ownerNavItems = [
