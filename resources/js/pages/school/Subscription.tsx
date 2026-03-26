@@ -54,34 +54,58 @@ export default function Subscription({ school, packages, payments }: Props) {
             <h1 className="text-2xl font-bold text-gray-800 mb-6">Subscription</h1>
 
             {/* Current Plan */}
-            <div className={`rounded-2xl p-6 mb-6 ${isActive ? 'bg-gradient-to-br from-teal-500 to-teal-600 text-white' : 'bg-white border border-gray-200'}`}>
-                <p className={`text-sm ${isActive ? 'text-teal-100' : 'text-gray-500'}`}>Current Plan</p>
-                <p className={`text-2xl font-bold mt-1 ${isActive ? '' : 'text-gray-800'}`}>
-                    {school.package?.name ?? (school.subscription_status === 'trial' ? 'Trial' : 'No Active Plan')}
-                </p>
-                {school.subscription_status && (
-                    <span className={`inline-block mt-2 px-3 py-1 rounded-full text-xs font-medium ${
-                        school.subscription_status === 'active' ? 'bg-white/20 text-white' :
-                        school.subscription_status === 'trial' ? 'bg-amber-400/20 text-amber-100' :
-                        'bg-red-100 text-red-700'
-                    }`}>
-                        {school.subscription_status === 'active' ? 'Active' : school.subscription_status === 'trial' ? 'Trial' : 'Inactive'}
-                    </span>
-                )}
-                {school.subscription_end && (
-                    <p className={`text-sm mt-2 ${isActive ? 'text-teal-200' : 'text-gray-500'}`}>
-                        Until {new Date(school.subscription_end).toLocaleDateString('ms-MY')}
-                    </p>
-                )}
-                {school.subscription_fee > 0 && (
-                    <p className={`text-sm mt-1 ${isActive ? 'text-teal-200' : 'text-gray-400'}`}>
-                        RM {Number(school.subscription_fee).toFixed(2)}/{school.package?.billing_cycle === 'yearly' ? 'year' : 'month'}
-                    </p>
-                )}
-                {!isActive && !hasPending && (
-                    <p className="text-sm text-amber-600 mt-2 font-medium">Subscribe to a plan below to activate your school.</p>
-                )}
-            </div>
+            {(() => {
+                const onTrial = school.subscription_status === 'trial';
+                const hasPaidPkg = onTrial && school.package && school.package.billing_cycle !== 'trial';
+                return (
+                    <>
+                        <div className={`rounded-2xl p-6 mb-4 ${isActive ? 'bg-gradient-to-br from-teal-500 to-teal-600 text-white' : 'bg-white border border-gray-200'}`}>
+                            <p className={`text-sm ${isActive ? 'text-teal-100' : 'text-gray-500'}`}>Current Plan</p>
+                            <p className={`text-2xl font-bold mt-1 ${isActive ? '' : 'text-gray-800'}`}>
+                                {onTrial ? 'Trial' : (school.package?.name ?? 'No Active Plan')}
+                            </p>
+                            {school.subscription_status && (
+                                <span className={`inline-block mt-2 px-3 py-1 rounded-full text-xs font-medium ${
+                                    school.subscription_status === 'active' ? 'bg-white/20 text-white' :
+                                    onTrial ? 'bg-amber-400/20 text-amber-100' : 'bg-red-100 text-red-700'
+                                }`}>
+                                    {school.subscription_status === 'active' ? 'Active' : onTrial ? (hasPaidPkg ? 'Trial (Extended)' : 'Trial') : 'Inactive'}
+                                </span>
+                            )}
+                            {onTrial && hasPaidPkg && school.subscription_start && (
+                                <p className="text-sm mt-2 text-teal-200">
+                                    Trial extended until {new Date(new Date(school.subscription_start).getTime() - 86400000).toLocaleDateString('ms-MY')}
+                                </p>
+                            )}
+                            {!onTrial && school.subscription_end && (
+                                <p className={`text-sm mt-2 ${isActive ? 'text-teal-200' : 'text-gray-500'}`}>
+                                    Until {new Date(school.subscription_end).toLocaleDateString('ms-MY')}
+                                </p>
+                            )}
+                            {school.subscription_fee > 0 && !onTrial && (
+                                <p className={`text-sm mt-1 ${isActive ? 'text-teal-200' : 'text-gray-400'}`}>
+                                    RM {Number(school.subscription_fee).toFixed(2)}/{school.package?.billing_cycle === 'yearly' ? 'year' : 'month'}
+                                </p>
+                            )}
+                        </div>
+
+                        {/* Upcoming paid plan banner */}
+                        {hasPaidPkg && (
+                            <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6">
+                                <p className="text-sm font-medium text-blue-800">
+                                    Upcoming: <span className="font-bold">{school.package?.name}</span> starts {school.subscription_start ? new Date(school.subscription_start).toLocaleDateString('ms-MY') : ''} — RM {Number(school.subscription_fee).toFixed(2)}/{school.package?.billing_cycle === 'yearly' ? 'year' : 'month'}
+                                </p>
+                            </div>
+                        )}
+                    </>
+                );
+            })()}
+
+            {!isActive && !hasPending && (
+                <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6">
+                    <p className="text-amber-800 font-medium text-sm">Subscribe to a plan below to activate your school.</p>
+                </div>
+            )}
 
             {/* Packages */}
             <h2 className="text-lg font-semibold text-gray-800 mb-4">Available Plans</h2>

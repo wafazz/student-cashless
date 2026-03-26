@@ -48,6 +48,16 @@ class SubscriptionPaymentController extends Controller
         if ($isTrial) {
             $start = now();
             $end = now()->addDays($package->duration_days);
+
+            $school->update([
+                'package_id' => $package->id,
+                'subscription_fee' => 0,
+                'subscription_status' => 'trial',
+                'subscription_start' => $start,
+                'subscription_end' => $end,
+            ]);
+
+            $msg = "Approved! {$school->name} trial activated until {$end->format('d/m/Y')}.";
         } else {
             // Monthly/Yearly always starts 1st of next month
             $baseDate = $hasActiveSub ? $currentEnd : now();
@@ -55,25 +65,30 @@ class SubscriptionPaymentController extends Controller
             $end = $package->billing_cycle === 'yearly'
                 ? $start->copy()->addYear()
                 : $start->copy()->addMonth();
-        }
 
-        $school->update([
-            'package_id' => $package->id,
-            'subscription_fee' => $package->price,
-            'subscription_status' => $hasActiveSub ? $school->subscription_status : ($isTrial ? 'trial' : 'active'),
-            'subscription_start' => $hasActiveSub ? $school->subscription_start : $start,
-            'subscription_end' => $end,
-        ]);
+            // If school is on trial, extend trial to last day before paid starts (no gap)
+            // Trial ends 3 Apr → paid starts 1 May → trial extended to 30 Apr
+            $isOnTrial = $hasActiveSub && $school->subscription_status === 'trial';
+            $trialExtendEnd = $start->copy()->subDay(); // e.g. 30 Apr
+
+            $school->update([
+                'package_id' => $package->id,
+                'subscription_fee' => $package->price,
+                'subscription_status' => $isOnTrial ? 'trial' : 'active',
+                'subscription_start' => $start, // paid plan start (1st of month)
+                'subscription_end' => $end,     // paid plan end
+            ]);
+
+            $msg = $isOnTrial
+                ? "Approved! Trial extended to {$trialExtendEnd->format('d/m/Y')}. {$package->name} starts {$start->format('d/m/Y')} until {$end->format('d/m/Y')}."
+                : "Approved! {$package->name} starts {$start->format('d/m/Y')} until {$end->format('d/m/Y')}.";
+        }
 
         $payment->update([
             'status' => 'approved',
             'approved_by' => auth()->id(),
             'approved_at' => now(),
         ]);
-
-        $msg = $isTrial
-            ? "Approved! {$school->name} trial activated until {$end->format('d/m/Y')}."
-            : "Approved! {$package->name} starts {$start->format('1 M Y')} until {$end->format('d/m/Y')}.";
 
         return back()->with('success', $msg);
     }
