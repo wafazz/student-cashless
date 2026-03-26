@@ -2,6 +2,7 @@ import { Link, router } from '@inertiajs/react';
 import AdminLayout from 'layouts/AdminLayout';
 import { Withdrawal } from 'types/models';
 import { useState } from 'react';
+import { formatDateTime } from 'utils/date';
 
 interface Props {
     withdrawals: {
@@ -117,7 +118,7 @@ export default function Withdrawals({ withdrawals, stats, filters }: Props) {
                                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColor(w.status)}`}>{w.status}</span>
                                     {w.payment_reference && <p className="text-xs text-green-600 mt-1">Ref: {w.payment_reference}</p>}
                                 </td>
-                                <td className="px-6 py-3 text-gray-500 text-xs">{new Date(w.requested_at).toLocaleString('ms-MY')}</td>
+                                <td className="px-6 py-3 text-gray-500 text-xs">{formatDateTime(w.requested_at)}</td>
                                 <td className="px-6 py-3 text-right">
                                     {w.status === 'pending' && (
                                         <div className="flex gap-1 justify-end">

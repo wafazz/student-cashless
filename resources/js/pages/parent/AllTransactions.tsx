@@ -2,6 +2,7 @@ import { Link, router } from '@inertiajs/react';
 import ParentLayout from 'layouts/ParentLayout';
 import { Student, Transaction } from 'types/models';
 import { useState } from 'react';
+import { formatDateTime } from 'utils/date';
 
 interface Props {
     transactions: {
@@ -99,7 +100,7 @@ export default function AllTransactions({ transactions, students, filters }: Pro
                                         <p className="text-xs text-gray-500">
                                             {tx.canteen?.name || 'Wallet'}
                                             {tx.canteen?.type === 'koperasi' && <span className="ml-1 text-purple-600">(Koperasi)</span>}
-                                            {' '}&middot; {new Date(tx.created_at).toLocaleString('ms-MY')}
+                                            {' '}&middot; {formatDateTime(tx.created_at)}
                                         </p>
                                     </div>
                                     <div className="text-right">

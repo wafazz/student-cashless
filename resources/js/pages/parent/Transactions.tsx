@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import ParentLayout from 'layouts/ParentLayout';
 import { Student, Transaction } from 'types/models';
+import { formatDateTime } from 'utils/date';
 
 interface Props {
     student: Student;
@@ -41,7 +42,7 @@ export default function Transactions({ student, transactions }: Props) {
                                             {tx.description || tx.type}
                                         </p>
                                         <p className="text-xs text-gray-500">
-                                            {tx.canteen?.name || 'Wallet'} &middot; {new Date(tx.created_at).toLocaleString('ms-MY')}
+                                            {tx.canteen?.name || 'Wallet'} &middot; {formatDateTime(tx.created_at)}
                                         </p>
                                     </div>
                                     <div className="text-right">

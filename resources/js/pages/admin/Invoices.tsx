@@ -2,6 +2,7 @@ import { useForm, router } from '@inertiajs/react';
 import AdminLayout from 'layouts/AdminLayout';
 import { School } from 'types/models';
 import { useState } from 'react';
+import { formatDate } from 'utils/date';
 
 interface Invoice {
     id: number;
@@ -134,10 +135,10 @@ export default function Invoices({ invoices, stats, filters }: Props) {
                                         <td className="px-6 py-4 text-gray-800">{inv.school?.name || '-'}</td>
                                         <td className="px-6 py-4 text-right font-semibold">RM {Number(inv.amount).toFixed(2)}</td>
                                         <td className="px-6 py-4 text-center text-gray-500 text-xs">
-                                            {new Date(inv.period_start).toLocaleDateString('ms-MY')} - {new Date(inv.period_end).toLocaleDateString('ms-MY')}
+                                            {formatDate(inv.period_start)} - {formatDate(inv.period_end)}
                                         </td>
                                         <td className="px-6 py-4 text-center text-gray-600">
-                                            {new Date(inv.due_date).toLocaleDateString('ms-MY')}
+                                            {formatDate(inv.due_date)}
                                         </td>
                                         <td className="px-6 py-4 text-center">
                                             <span className={`px-2 py-1 rounded-full text-xs ${statusColor(inv.status)}`}>{inv.status}</span>

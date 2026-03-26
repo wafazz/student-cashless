@@ -1,6 +1,7 @@
 import { router } from '@inertiajs/react';
 import ParentLayout from 'layouts/ParentLayout';
 import { SchoolFeeStudent, SchoolFee, School, SchoolClass, Student } from 'types/models';
+import { formatDate, formatDateTime } from 'utils/date';
 
 interface Assignment extends SchoolFeeStudent {
     fee: SchoolFee & { school: School; school_class?: SchoolClass };
@@ -42,7 +43,7 @@ export default function SchoolFees({ assignments, walletBalance }: Props) {
                                     <p className="font-semibold text-gray-800">{a.fee.name}</p>
                                     <p className="text-xs text-gray-500">{a.student?.name} &middot; {a.fee.school?.name}</p>
                                     {a.fee.school_class && <p className="text-xs text-teal-600">{a.fee.school_class.name}</p>}
-                                    <p className="text-xs text-amber-600 mt-1">Due: {new Date(a.fee.due_date).toLocaleDateString('ms-MY')}</p>
+                                    <p className="text-xs text-amber-600 mt-1">Due: {formatDate(a.fee.due_date)}</p>
                                 </div>
                                 <div className="text-right">
                                     <p className="text-xl font-bold text-amber-600 mb-2">RM {Number(a.fee.amount).toFixed(2)}</p>
@@ -70,7 +71,7 @@ export default function SchoolFees({ assignments, walletBalance }: Props) {
                                 <div>
                                     <p className="font-semibold text-gray-800">{a.fee.name}</p>
                                     <p className="text-xs text-gray-500">{a.student?.name} &middot; {a.fee.school?.name}</p>
-                                    <p className="text-xs text-green-600 mt-1">Paid: {a.paid_at ? new Date(a.paid_at).toLocaleString('ms-MY') : ''}</p>
+                                    <p className="text-xs text-green-600 mt-1">Paid: {a.paid_at ? formatDateTime(a.paid_at) : ''}</p>
                                 </div>
                                 <div className="text-right">
                                     <p className="text-lg font-bold text-green-600">RM {Number(a.amount_paid).toFixed(2)}</p>

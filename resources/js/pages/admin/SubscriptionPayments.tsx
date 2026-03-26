@@ -2,6 +2,7 @@ import { Link, router } from '@inertiajs/react';
 import AdminLayout from 'layouts/AdminLayout';
 import { SubscriptionPayment, School, SubscriptionPackage } from 'types/models';
 import { useState } from 'react';
+import { formatDate, formatDateTime } from 'utils/date';
 
 interface Payment extends SubscriptionPayment {
     school: School;
@@ -92,7 +93,7 @@ export default function SubscriptionPayments({ payments, pendingCount, filters }
                                     <span className={`px-2 py-1 rounded-full text-xs font-medium ${statusColor(p.status)}`}>{p.status}</span>
                                     {p.admin_notes && <p className="text-xs text-red-400 mt-1">{p.admin_notes}</p>}
                                 </td>
-                                <td className="px-6 py-4 text-gray-500 text-xs">{new Date(p.created_at).toLocaleString('ms-MY')}</td>
+                                <td className="px-6 py-4 text-gray-500 text-xs">{formatDateTime(p.created_at)}</td>
                                 <td className="px-6 py-4 text-right">
                                     {p.status === 'pending' && (
                                         <div className="flex gap-2 justify-end">
@@ -101,7 +102,7 @@ export default function SubscriptionPayments({ payments, pendingCount, filters }
                                         </div>
                                     )}
                                     {p.status === 'approved' && p.approved_at && (
-                                        <span className="text-xs text-gray-400">Approved {new Date(p.approved_at).toLocaleDateString('ms-MY')}</span>
+                                        <span className="text-xs text-gray-400">Approved {formatDate(p.approved_at)}</span>
                                     )}
                                 </td>
                             </tr>

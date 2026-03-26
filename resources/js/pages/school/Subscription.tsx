@@ -2,6 +2,7 @@ import { useForm } from '@inertiajs/react';
 import SchoolLayout from 'layouts/SchoolLayout';
 import { School, SubscriptionPackage, SubscriptionPayment } from 'types/models';
 import { useState, useRef } from 'react';
+import { formatDate, formatDateTime } from 'utils/date';
 
 interface Props {
     school: School & { package?: SubscriptionPackage };
@@ -81,12 +82,12 @@ export default function Subscription({ school, packages, payments }: Props) {
                             )}
                             {onTrial && hasPaidPkg && school.subscription_start && (
                                 <p className="text-sm mt-2 text-teal-200">
-                                    Trial extended until {new Date(new Date(school.subscription_start).getTime() - 86400000).toLocaleDateString('ms-MY')}
+                                    Trial extended until {formatDate(new Date(new Date(school.subscription_start).getTime() - 86400000))}
                                 </p>
                             )}
                             {!onTrial && school.subscription_end && (
                                 <p className={`text-sm mt-2 ${isActive ? 'text-teal-200' : 'text-gray-500'}`}>
-                                    Until {new Date(school.subscription_end).toLocaleDateString('ms-MY')}
+                                    Until {formatDate(school.subscription_end)}
                                 </p>
                             )}
                             {school.subscription_fee > 0 && !onTrial && (
@@ -100,7 +101,7 @@ export default function Subscription({ school, packages, payments }: Props) {
                         {hasPaidPkg && (
                             <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6">
                                 <p className="text-sm font-medium text-blue-800">
-                                    Upcoming: <span className="font-bold">{school.package?.name}</span> starts {school.subscription_start ? new Date(school.subscription_start).toLocaleDateString('ms-MY') : ''} — RM {Number(school.subscription_fee).toFixed(2)}/{school.package?.billing_cycle === 'yearly' ? 'year' : 'month'}
+                                    Upcoming: <span className="font-bold">{school.package?.name}</span> starts {school.subscription_start ? formatDate(school.subscription_start) : ''} — RM {Number(school.subscription_fee).toFixed(2)}/{school.package?.billing_cycle === 'yearly' ? 'year' : 'month'}
                                 </p>
                             </div>
                         )}
@@ -119,7 +120,7 @@ export default function Subscription({ school, packages, payments }: Props) {
                 <div className="bg-blue-50 border border-blue-200 rounded-2xl p-4 mb-6">
                     <p className="text-blue-800 text-sm">
                         Renewal available <span className="font-bold">7 days</span> before subscription ends.
-                        You can renew from <span className="font-semibold">{new Date(new Date(school.subscription_end!).getTime() - 7 * 86400000).toLocaleDateString('ms-MY')}</span> ({daysLeft} days remaining).
+                        You can renew from <span className="font-semibold">{formatDate(new Date(new Date(school.subscription_end!).getTime() - 7 * 86400000))}</span> ({daysLeft} days remaining).
                     </p>
                 </div>
             )}
@@ -244,7 +245,7 @@ export default function Subscription({ school, packages, payments }: Props) {
                                 <div key={p.id} className="px-6 py-4 flex items-center justify-between">
                                     <div>
                                         <p className="text-sm font-medium text-gray-800">{p.package?.name} — RM {Number(p.amount).toFixed(2)}</p>
-                                        <p className="text-xs text-gray-500">{new Date(p.created_at).toLocaleString('ms-MY')}</p>
+                                        <p className="text-xs text-gray-500">{formatDateTime(p.created_at)}</p>
                                         {p.admin_notes && <p className="text-xs text-red-500 mt-1">{p.admin_notes}</p>}
                                     </div>
                                     <div className="flex items-center gap-3">

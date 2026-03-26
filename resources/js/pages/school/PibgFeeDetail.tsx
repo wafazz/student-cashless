@@ -2,6 +2,7 @@ import { Link, router } from '@inertiajs/react';
 import SchoolLayout from 'layouts/SchoolLayout';
 import { PibgFee, PibgFeeParent, User } from 'types/models';
 import { useState } from 'react';
+import { formatDate, formatDateTime } from 'utils/date';
 
 interface Props {
     fee: PibgFee;
@@ -36,7 +37,7 @@ export default function PibgFeeDetail({ fee, assignments }: Props) {
                 <div className="flex items-center justify-between mb-4">
                     <div>
                         <h1 className="text-2xl font-bold text-gray-800">{fee.name}</h1>
-                        <p className="text-sm text-gray-500">{fee.academic_year} &middot; Due: {new Date(fee.due_date).toLocaleDateString('ms-MY')}</p>
+                        <p className="text-sm text-gray-500">{fee.academic_year} &middot; Due: {formatDate(fee.due_date)}</p>
                     </div>
                     <p className="text-3xl font-bold text-teal-600">RM {Number(fee.amount).toFixed(2)}</p>
                 </div>
@@ -94,7 +95,7 @@ export default function PibgFeeDetail({ fee, assignments }: Props) {
                                         {a.status}
                                     </span>
                                 </td>
-                                <td className="px-6 py-3 text-gray-500 text-xs">{a.paid_at ? new Date(a.paid_at).toLocaleString('ms-MY') : '-'}</td>
+                                <td className="px-6 py-3 text-gray-500 text-xs">{a.paid_at ? formatDateTime(a.paid_at) : '-'}</td>
                                 <td className="px-6 py-3 text-right">
                                     {a.status === 'paid' && (
                                         <a href={`/school/receipt/pibg/${a.id}`} className="text-teal-600 hover:underline text-xs">Download</a>

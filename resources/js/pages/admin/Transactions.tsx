@@ -2,6 +2,7 @@ import { Link, router } from '@inertiajs/react';
 import AdminLayout from 'layouts/AdminLayout';
 import { Transaction } from 'types/models';
 import { useState } from 'react';
+import { formatDateTime } from 'utils/date';
 
 interface Props {
     transactions: {
@@ -113,7 +114,7 @@ export default function Transactions({ transactions, filters }: Props) {
                                         <td className={`px-6 py-3 text-right font-semibold ${tx.type === 'topup' ? 'text-green-600' : 'text-red-500'}`}>
                                             {tx.type === 'topup' ? '+' : '-'}RM {Number(tx.amount).toFixed(2)}
                                         </td>
-                                        <td className="px-6 py-3 text-gray-500 text-xs">{new Date(tx.created_at).toLocaleString('ms-MY')}</td>
+                                        <td className="px-6 py-3 text-gray-500 text-xs">{formatDateTime(tx.created_at)}</td>
                                     </tr>
                                 ))}
                             </tbody>

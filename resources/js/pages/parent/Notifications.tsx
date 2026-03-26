@@ -1,5 +1,6 @@
 import { Link, router } from '@inertiajs/react';
 import ParentLayout from 'layouts/ParentLayout';
+import { formatDateTime } from 'utils/date';
 
 interface Notification {
     id: string;
@@ -62,12 +63,7 @@ export default function Notifications({ notifications }: Props) {
                                             </p>
                                         </div>
                                         <span className="text-xs text-gray-400 flex-shrink-0 ml-4">
-                                            {new Date(notification.created_at).toLocaleDateString('ms-MY', {
-                                                day: 'numeric',
-                                                month: 'short',
-                                                hour: '2-digit',
-                                                minute: '2-digit',
-                                            })}
+                                            {formatDateTime(notification.created_at)}
                                         </span>
                                     </div>
                                 </div>

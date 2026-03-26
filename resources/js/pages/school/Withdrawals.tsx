@@ -2,6 +2,7 @@ import { useForm } from '@inertiajs/react';
 import SchoolLayout from 'layouts/SchoolLayout';
 import { Withdrawal } from 'types/models';
 import { useState } from 'react';
+import { formatDateTime } from 'utils/date';
 
 interface Props {
     balance: number;
@@ -136,7 +137,7 @@ export default function Withdrawals({ balance, totalEarned, pibgCollected, schoo
                                 <div>
                                     <p className="text-sm font-medium text-gray-800">RM {Number(w.amount).toFixed(2)}</p>
                                     <p className="text-xs text-gray-500">Fee: RM {Number(w.platform_fee).toFixed(2)} | Net: RM {Number(w.net_amount).toFixed(2)}</p>
-                                    <p className="text-xs text-gray-400 mt-1">{new Date(w.requested_at).toLocaleString('ms-MY')}</p>
+                                    <p className="text-xs text-gray-400 mt-1">{formatDateTime(w.requested_at)}</p>
                                     {w.payment_reference && <p className="text-xs text-green-600">Ref: {w.payment_reference}</p>}
                                 </div>
                                 <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusColor(w.status)}`}>{w.status}</span>

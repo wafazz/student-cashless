@@ -1,6 +1,7 @@
 import { useForm } from '@inertiajs/react';
 import AdminLayout from 'layouts/AdminLayout';
 import { useState } from 'react';
+import { formatDate } from 'utils/date';
 
 interface Registration {
     id: number;
@@ -91,7 +92,7 @@ export default function Registrations({ registrations }: Props) {
                                 )}
                                 <div>
                                     <span className="text-gray-500">Submitted:</span>
-                                    <span className="ml-1 text-gray-800">{new Date(reg.created_at).toLocaleDateString('ms-MY')}</span>
+                                    <span className="ml-1 text-gray-800">{formatDate(reg.created_at)}</span>
                                 </div>
                             </div>
                             {reg.notes && (
@@ -166,7 +167,7 @@ export default function Registrations({ registrations }: Props) {
                                         <td className="px-6 py-4 text-center">
                                             <span className={`px-2 py-1 rounded-full text-xs ${statusColor(reg.status)}`}>{reg.status}</span>
                                         </td>
-                                        <td className="px-6 py-4 text-gray-500">{new Date(reg.created_at).toLocaleDateString('ms-MY')}</td>
+                                        <td className="px-6 py-4 text-gray-500">{formatDate(reg.created_at)}</td>
                                     </tr>
                                 ))}
                             </tbody>

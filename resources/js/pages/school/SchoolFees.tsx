@@ -2,6 +2,7 @@ import { useForm, Link } from '@inertiajs/react';
 import SchoolLayout from 'layouts/SchoolLayout';
 import { SchoolFee, SchoolClass } from 'types/models';
 import { useState } from 'react';
+import { formatDate } from 'utils/date';
 
 interface Props {
     fees: SchoolFee[];
@@ -98,7 +99,7 @@ export default function SchoolFees({ fees, classes }: Props) {
                                 )}
                                 {!fee.school_class && <p className="text-xs text-gray-400 mb-1">All Classes</p>}
                                 <p className="text-2xl font-bold text-teal-600 mb-1">RM {Number(fee.amount).toFixed(2)}</p>
-                                <p className="text-xs text-gray-500">{fee.academic_year} &middot; Due: {new Date(fee.due_date).toLocaleDateString('ms-MY')}</p>
+                                <p className="text-xs text-gray-500">{fee.academic_year} &middot; Due: {formatDate(fee.due_date)}</p>
                                 <div className="mt-4">
                                     <div className="flex justify-between text-xs text-gray-500 mb-1">
                                         <span>{fee.paid_count || 0} paid</span>

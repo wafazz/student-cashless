@@ -1,5 +1,6 @@
 import SchoolLayout from 'layouts/SchoolLayout';
 import { PibgFee, PibgFeeParent, User } from 'types/models';
+import { formatDate } from 'utils/date';
 
 interface FeeWithStats extends PibgFee {
     total_collected: number;
@@ -76,7 +77,7 @@ export default function Reports({ fees, outstanding }: Props) {
                                 <td className="px-6 py-3 text-gray-600">{o.parent?.phone || '-'}</td>
                                 <td className="px-6 py-3 text-gray-600">{o.fee?.name}</td>
                                 <td className="px-6 py-3 text-right text-amber-600 font-semibold">RM {Number(o.fee?.amount || 0).toFixed(2)}</td>
-                                <td className="px-6 py-3 text-gray-500 text-xs">{o.fee?.due_date ? new Date(o.fee.due_date).toLocaleDateString('ms-MY') : '-'}</td>
+                                <td className="px-6 py-3 text-gray-500 text-xs">{o.fee?.due_date ? formatDate(o.fee.due_date) : '-'}</td>
                             </tr>
                         ))}
                     </tbody>

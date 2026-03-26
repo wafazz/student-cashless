@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import ParentLayout from 'layouts/ParentLayout';
 import { Topup } from 'types/models';
+import { formatDateTime } from 'utils/date';
 
 interface Props {
     topups: {
@@ -39,7 +40,7 @@ export default function TopupHistory({ topups }: Props) {
                                     <div>
                                         <p className="text-sm font-medium text-gray-800">{topup.student?.name}</p>
                                         <p className="text-xs text-gray-500">
-                                            {topup.payment_method === 'fpx' ? 'FPX' : 'Manual'} &middot; {new Date(topup.created_at).toLocaleString('ms-MY')}
+                                            {topup.payment_method === 'fpx' ? 'FPX' : 'Manual'} &middot; {formatDateTime(topup.created_at)}
                                         </p>
                                     </div>
                                     <div className="text-right">

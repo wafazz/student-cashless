@@ -2,6 +2,7 @@ import { Link, router } from '@inertiajs/react';
 import SchoolLayout from 'layouts/SchoolLayout';
 import { SchoolFee, SchoolFeeStudent, Student, User } from 'types/models';
 import { useState } from 'react';
+import { formatDate, formatDateTime } from 'utils/date';
 
 interface Assignment extends SchoolFeeStudent {
     student: Student & { parent: User };
@@ -29,7 +30,7 @@ export default function SchoolFeeDetail({ fee, assignments }: Props) {
                     <div>
                         <h1 className="text-2xl font-bold text-gray-800">{fee.name}</h1>
                         <p className="text-sm text-gray-500">
-                            {fee.school_class?.name || 'All Classes'} &middot; {fee.academic_year} &middot; Due: {new Date(fee.due_date).toLocaleDateString('ms-MY')}
+                            {fee.school_class?.name || 'All Classes'} &middot; {fee.academic_year} &middot; Due: {formatDate(fee.due_date)}
                         </p>
                     </div>
                     <p className="text-3xl font-bold text-teal-600">RM {Number(fee.amount).toFixed(2)}</p>
@@ -75,7 +76,7 @@ export default function SchoolFeeDetail({ fee, assignments }: Props) {
                                 <td className="px-6 py-3 text-center">
                                     <span className={`px-2 py-1 rounded-full text-xs ${a.status === 'paid' ? 'bg-green-50 text-green-700' : 'bg-amber-50 text-amber-700'}`}>{a.status}</span>
                                 </td>
-                                <td className="px-6 py-3 text-gray-500 text-xs">{a.paid_at ? new Date(a.paid_at).toLocaleString('ms-MY') : '-'}</td>
+                                <td className="px-6 py-3 text-gray-500 text-xs">{a.paid_at ? formatDateTime(a.paid_at) : '-'}</td>
                                 <td className="px-6 py-3 text-right">
                                     {a.status === 'paid' && (
                                         <a href={`/school/receipt/fee/${a.id}`} className="text-teal-600 hover:underline text-xs">Download</a>

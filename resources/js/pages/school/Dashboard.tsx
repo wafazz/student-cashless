@@ -1,5 +1,6 @@
 import SchoolLayout from 'layouts/SchoolLayout';
 import { PibgFeeParent } from 'types/models';
+import { formatDateTime } from 'utils/date';
 
 interface Props {
     stats: {
@@ -50,7 +51,7 @@ export default function Dashboard({ stats, recentPayments }: Props) {
                             <div key={p.id} className="px-6 py-4 flex items-center justify-between">
                                 <div>
                                     <p className="text-sm font-medium text-gray-800">{p.parent?.name}</p>
-                                    <p className="text-xs text-gray-500">{p.fee?.name} &middot; {p.paid_at ? new Date(p.paid_at).toLocaleString('ms-MY') : ''}</p>
+                                    <p className="text-xs text-gray-500">{p.fee?.name} &middot; {p.paid_at ? formatDateTime(p.paid_at) : ''}</p>
                                 </div>
                                 <span className="text-sm font-semibold text-green-600">RM {Number(p.amount_paid).toFixed(2)}</span>
                             </div>

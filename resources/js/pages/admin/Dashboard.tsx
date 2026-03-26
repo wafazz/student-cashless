@@ -1,6 +1,7 @@
 import AdminLayout from 'layouts/AdminLayout';
 import { Transaction } from 'types/models';
 import { useState, useEffect } from 'react';
+import { formatDateTime } from 'utils/date';
 
 interface Props {
     stats: {
@@ -113,7 +114,7 @@ export default function Dashboard({ stats, monthlyData, recentTransactions }: Pr
                                     <p className="text-xs text-gray-500">
                                         {tx.canteen?.name || 'Wallet'}
                                         {tx.canteen?.type === 'koperasi' && <span className="ml-1 text-purple-600">(Koperasi)</span>}
-                                        {' '}&middot; {new Date(tx.created_at).toLocaleString('ms-MY')}
+                                        {' '}&middot; {formatDateTime(tx.created_at)}
                                     </p>
                                 </div>
                                 <span className={`text-sm font-semibold ${tx.type === 'topup' ? 'text-green-600' : 'text-red-500'}`}>
