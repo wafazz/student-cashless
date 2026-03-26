@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Parent;
 
 use App\Http\Controllers\Controller;
 use App\Models\School;
+use App\Models\SchoolClass;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -12,12 +13,14 @@ class ChildrenController extends Controller
 {
     public function index()
     {
-        $students = auth()->user()->students()->with('school')->get();
+        $students = auth()->user()->students()->with('school', 'schoolClass')->get();
         $schools = School::where('status', 'active')->get();
+        $classes = SchoolClass::where('status', 'active')->orderBy('school_id')->orderBy('name')->get();
 
         return Inertia::render('parent/Children', [
             'students' => $students,
             'schools' => $schools,
+            'classes' => $classes,
         ]);
     }
 
@@ -27,6 +30,7 @@ class ChildrenController extends Controller
             'name' => 'required|string|max:255',
             'school_id' => 'required|exists:schools,id',
             'ic_number' => 'nullable|string|max:20',
+            'class_id' => 'nullable|exists:school_classes,id',
             'class_name' => 'nullable|string|max:100',
             'daily_limit_canteen' => 'nullable|numeric|min:0',
             'daily_limit_koperasi' => 'nullable|numeric|min:0',
@@ -36,7 +40,11 @@ class ChildrenController extends Controller
             'photo.max' => 'Photo must not exceed 5MB.',
         ]);
 
-        $data = $request->only(['name', 'school_id', 'ic_number', 'class_name', 'daily_limit_canteen', 'daily_limit_koperasi']);
+        $data = $request->only(['name', 'school_id', 'class_id', 'ic_number', 'class_name', 'daily_limit_canteen', 'daily_limit_koperasi']);
+        // Auto-set class_name from selected class
+        if ($request->class_id) {
+            $data['class_name'] = SchoolClass::find($request->class_id)?->name;
+        }
 
         if ($request->hasFile('photo')) {
             $data['photo'] = $request->file('photo')->store('students', 'public');
@@ -57,13 +65,17 @@ class ChildrenController extends Controller
             'name' => 'required|string|max:255',
             'school_id' => 'required|exists:schools,id',
             'ic_number' => 'nullable|string|max:20',
+            'class_id' => 'nullable|exists:school_classes,id',
             'class_name' => 'nullable|string|max:100',
             'daily_limit_canteen' => 'nullable|numeric|min:0',
             'daily_limit_koperasi' => 'nullable|numeric|min:0',
             'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
         ]);
 
-        $data = $request->only(['name', 'school_id', 'ic_number', 'class_name', 'daily_limit_canteen', 'daily_limit_koperasi']);
+        $data = $request->only(['name', 'school_id', 'class_id', 'ic_number', 'class_name', 'daily_limit_canteen', 'daily_limit_koperasi']);
+        if ($request->class_id) {
+            $data['class_name'] = SchoolClass::find($request->class_id)?->name;
+        }
 
         if ($request->hasFile('photo')) {
             // Delete old photo

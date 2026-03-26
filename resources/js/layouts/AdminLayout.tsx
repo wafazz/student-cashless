@@ -10,6 +10,8 @@ const navItems = [
     { label: 'Store Operators', href: '/admin/operators', icon: '👤' },
     { label: 'Parents', href: '/admin/parents', icon: '👪' },
     { label: 'Transactions', href: '/admin/transactions', icon: '📋' },
+    { label: 'PIBG', href: '/admin/pibg', icon: '🏫' },
+    { label: 'School Users', href: '/admin/school-users', icon: '🔑' },
     { label: 'Reports', href: '/admin/reports', icon: '📊' },
     { label: 'Settings', href: '/admin/settings', icon: '⚙️' },
 ];

@@ -13,7 +13,7 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $fillable = [
-        'name', 'email', 'phone', 'password', 'role', 'status',
+        'name', 'email', 'phone', 'password', 'role', 'school_id', 'status',
         'wallet_uuid', 'wallet_balance',
     ];
 
@@ -37,6 +37,16 @@ class User extends Authenticatable
             'password' => 'hashed',
             'wallet_balance' => 'decimal:2',
         ];
+    }
+
+    public function school()
+    {
+        return $this->belongsTo(School::class);
+    }
+
+    public function pibgFeeAssignments()
+    {
+        return $this->hasMany(PibgFeeParent::class, 'parent_id');
     }
 
     public function students()

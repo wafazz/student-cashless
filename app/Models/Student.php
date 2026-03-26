@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 class Student extends Model
 {
     protected $fillable = [
-        'parent_id', 'school_id', 'name', 'ic_number', 'class_name',
+        'parent_id', 'school_id', 'class_id', 'name', 'ic_number', 'class_name',
         'wallet_uuid', 'wallet_balance',
         'daily_limit_canteen', 'daily_limit_koperasi',
         'daily_spent_canteen', 'daily_spent_koperasi',
@@ -40,6 +40,11 @@ class Student extends Model
     public function school()
     {
         return $this->belongsTo(School::class);
+    }
+
+    public function schoolClass()
+    {
+        return $this->belongsTo(SchoolClass::class, 'class_id');
     }
 
     public function transactions()

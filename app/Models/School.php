@@ -22,6 +22,16 @@ class School extends Model
         return $this->hasMany(Student::class);
     }
 
+    public function classes()
+    {
+        return $this->hasMany(SchoolClass::class);
+    }
+
+    public function schoolFees()
+    {
+        return $this->hasMany(SchoolFee::class);
+    }
+
     public function canteens()
     {
         return $this->hasMany(Canteen::class);
@@ -30,5 +40,15 @@ class School extends Model
     public function invoices()
     {
         return $this->hasMany(Invoice::class);
+    }
+
+    public function pibgFees()
+    {
+        return $this->hasMany(PibgFee::class);
+    }
+
+    public function schoolUsers()
+    {
+        return $this->hasMany(User::class)->where('role', 'school');
     }
 }

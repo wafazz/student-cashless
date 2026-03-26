@@ -33,6 +33,7 @@ Route::get('/', function () {
             'admin' => redirect('/admin/dashboard'),
             'parent' => redirect('/parent/dashboard'),
             'operator', 'cashier' => redirect('/operator/dashboard'),
+            'school' => redirect('/school/dashboard'),
         };
     }
     return Inertia::render('Landing');
@@ -74,6 +75,10 @@ Route::prefix('parent')->middleware(['auth', 'role:parent'])->group(function () 
     Route::get('/profile', [ProfileController::class, 'index'])->name('parent.profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('parent.profile.update');
     Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('parent.profile.password');
+    Route::get('/pibg-fees', [\App\Http\Controllers\Parent\PibgFeeController::class, 'index'])->name('parent.pibg-fees');
+    Route::post('/pibg-fees/{pibgFeeParent}/pay', [\App\Http\Controllers\Parent\PibgFeeController::class, 'pay'])->name('parent.pibg-fees.pay');
+    Route::get('/school-fees', [\App\Http\Controllers\Parent\SchoolFeeController::class, 'index'])->name('parent.school-fees');
+    Route::post('/school-fees/{schoolFeeStudent}/pay', [\App\Http\Controllers\Parent\SchoolFeeController::class, 'pay'])->name('parent.school-fees.pay');
     Route::get('/receipt/{transaction}', function (\App\Models\Transaction $transaction) {
         $studentIds = auth()->user()->students()->pluck('id');
         if (!$studentIds->contains($transaction->student_id)) {
@@ -108,6 +113,27 @@ Route::prefix('operator')->middleware(['auth', 'role:operator', 'subscription'])
     Route::put('/staff/{staff}', [\App\Http\Controllers\Operator\StaffController::class, 'update'])->name('operator.staff.update');
 });
 
+// School Routes (PIBG)
+Route::prefix('school')->middleware(['auth', 'role:school'])->group(function () {
+    Route::get('/dashboard', [\App\Http\Controllers\School\DashboardController::class, 'index'])->name('school.dashboard');
+    Route::get('/pibg-fees', [\App\Http\Controllers\School\PibgFeeController::class, 'index'])->name('school.pibg-fees');
+    Route::post('/pibg-fees', [\App\Http\Controllers\School\PibgFeeController::class, 'store'])->name('school.pibg-fees.store');
+    Route::get('/pibg-fees/{pibgFee}', [\App\Http\Controllers\School\PibgFeeController::class, 'show'])->name('school.pibg-fees.show');
+    Route::put('/pibg-fees/{pibgFee}', [\App\Http\Controllers\School\PibgFeeController::class, 'update'])->name('school.pibg-fees.update');
+    Route::delete('/pibg-fees/{pibgFee}', [\App\Http\Controllers\School\PibgFeeController::class, 'destroy'])->name('school.pibg-fees.destroy');
+    Route::post('/pibg-fees/{pibgFee}/reassign', [\App\Http\Controllers\School\PibgFeeController::class, 'reassign'])->name('school.pibg-fees.reassign');
+    Route::get('/classes', [\App\Http\Controllers\School\ClassController::class, 'index'])->name('school.classes');
+    Route::post('/classes', [\App\Http\Controllers\School\ClassController::class, 'store'])->name('school.classes.store');
+    Route::put('/classes/{schoolClass}', [\App\Http\Controllers\School\ClassController::class, 'update'])->name('school.classes.update');
+    Route::delete('/classes/{schoolClass}', [\App\Http\Controllers\School\ClassController::class, 'destroy'])->name('school.classes.destroy');
+    Route::get('/school-fees', [\App\Http\Controllers\School\SchoolFeeController::class, 'index'])->name('school.school-fees');
+    Route::post('/school-fees', [\App\Http\Controllers\School\SchoolFeeController::class, 'store'])->name('school.school-fees.store');
+    Route::get('/school-fees/{schoolFee}', [\App\Http\Controllers\School\SchoolFeeController::class, 'show'])->name('school.school-fees.show');
+    Route::put('/school-fees/{schoolFee}', [\App\Http\Controllers\School\SchoolFeeController::class, 'update'])->name('school.school-fees.update');
+    Route::delete('/school-fees/{schoolFee}', [\App\Http\Controllers\School\SchoolFeeController::class, 'destroy'])->name('school.school-fees.destroy');
+    Route::get('/reports', [\App\Http\Controllers\School\ReportController::class, 'index'])->name('school.reports');
+});
+
 // Admin Routes
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('admin.dashboard');
@@ -126,6 +152,10 @@ Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/registrations/{registration}', [SchoolRegistrationController::class, 'update'])->name('admin.registrations.update');
     Route::get('/invoices', [InvoiceController::class, 'index'])->name('admin.invoices');
     Route::put('/invoices/{invoice}', [InvoiceController::class, 'update'])->name('admin.invoices.update');
+    Route::get('/pibg', [\App\Http\Controllers\Admin\PibgController::class, 'index'])->name('admin.pibg');
+    Route::get('/school-users', [\App\Http\Controllers\Admin\PibgController::class, 'schoolUsers'])->name('admin.school-users');
+    Route::post('/school-users', [\App\Http\Controllers\Admin\PibgController::class, 'storeSchoolUser'])->name('admin.school-users.store');
+    Route::put('/school-users/{user}', [\App\Http\Controllers\Admin\PibgController::class, 'updateSchoolUser'])->name('admin.school-users.update');
 });
 
 // Payment Callbacks (CSRF exempt via bootstrap/app.php)

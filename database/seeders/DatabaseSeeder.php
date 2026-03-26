@@ -35,6 +35,23 @@ class DatabaseSeeder extends Seeder
             'phone' => '03-41987654',
         ]);
 
+        // School Users (PIBG)
+        User::create([
+            'name' => 'Pn. Noraini (PIBG)',
+            'email' => 'pibg@skmelawati.my',
+            'password' => 'password',
+            'role' => 'school',
+            'school_id' => $school1->id,
+        ]);
+
+        User::create([
+            'name' => 'En. Razak (PIBG)',
+            'email' => 'pibg@skwangsa.my',
+            'password' => 'password',
+            'role' => 'school',
+            'school_id' => $school2->id,
+        ]);
+
         // Operators
         $operator1 = User::create([
             'name' => 'Makcik Kiah',

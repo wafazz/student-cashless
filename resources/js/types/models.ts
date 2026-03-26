@@ -3,7 +3,8 @@ export interface User {
     name: string;
     email: string;
     phone: string | null;
-    role: 'admin' | 'parent' | 'operator' | 'cashier';
+    role: 'admin' | 'parent' | 'operator' | 'cashier' | 'school';
+    school_id: number | null;
     status: 'active' | 'inactive';
     email_verified_at: string | null;
     created_at: string;
@@ -24,6 +25,7 @@ export interface School {
     created_at: string;
     updated_at: string;
     canteens?: Canteen[];
+    classes?: SchoolClass[];
     students_count?: number;
 }
 
@@ -31,9 +33,11 @@ export interface Student {
     id: number;
     parent_id: number;
     school_id: number;
+    class_id: number | null;
     name: string;
     ic_number: string | null;
     class_name: string | null;
+    school_class?: SchoolClass;
     wallet_uuid: string;
     wallet_balance: number;
     daily_limit_canteen: number | null;
@@ -141,6 +145,82 @@ export interface SchoolRegistration {
     created_at: string;
 }
 
+export interface SchoolClass {
+    id: number;
+    school_id: number;
+    name: string;
+    level: string | null;
+    status: 'active' | 'inactive';
+    created_at: string;
+    updated_at: string;
+    students_count?: number;
+}
+
+export interface SchoolFee {
+    id: number;
+    school_id: number;
+    class_id: number | null;
+    name: string;
+    amount: number;
+    academic_year: string;
+    due_date: string;
+    description: string | null;
+    status: 'active' | 'inactive';
+    created_at: string;
+    updated_at: string;
+    school_class?: SchoolClass;
+    paid_count?: number;
+    unpaid_count?: number;
+}
+
+export interface SchoolFeeStudent {
+    id: number;
+    school_fee_id: number;
+    student_id: number;
+    school_id: number;
+    amount_paid: number;
+    status: 'unpaid' | 'paid';
+    paid_at: string | null;
+    payment_method: string | null;
+    reference_id: string | null;
+    created_at: string;
+    fee?: SchoolFee;
+    student?: Student;
+}
+
+export interface PibgFee {
+    id: number;
+    school_id: number;
+    name: string;
+    amount: number;
+    academic_year: string;
+    due_date: string;
+    description: string | null;
+    status: 'active' | 'inactive';
+    created_at: string;
+    updated_at: string;
+    school?: School;
+    paid_count?: number;
+    unpaid_count?: number;
+    parents_count?: number;
+}
+
+export interface PibgFeeParent {
+    id: number;
+    pibg_fee_id: number;
+    parent_id: number;
+    school_id: number;
+    amount_paid: number;
+    status: 'unpaid' | 'paid';
+    paid_at: string | null;
+    payment_method: string | null;
+    reference_id: string | null;
+    created_at: string;
+    fee?: PibgFee;
+    parent?: User;
+    school?: School;
+}
+
 export interface PageProps {
     auth: {
         user: User | null;
@@ -150,4 +230,5 @@ export interface PageProps {
         error: string | null;
     };
     unreadNotifications: number;
+    pibgOutstanding: number;
 }

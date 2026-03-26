@@ -35,6 +35,7 @@ class LoginController extends Controller
                 'admin' => redirect()->intended('/admin/dashboard'),
                 'parent' => redirect()->intended('/parent/dashboard'),
                 'operator', 'cashier' => redirect()->intended('/operator/dashboard'),
+                'school' => redirect()->intended('/school/dashboard'),
             };
         }
 

@@ -28,6 +28,9 @@ class HandleInertiaRequests extends Middleware
             'unreadNotifications' => fn () => $request->user()
                 ? $request->user()->unreadNotifications()->count()
                 : 0,
+            'pibgOutstanding' => fn () => $request->user() && $request->user()->role === 'parent'
+                ? \App\Models\PibgFeeParent::where('parent_id', $request->user()->id)->where('status', 'unpaid')->whereHas('fee', fn($q) => $q->where('status', 'active'))->count()
+                : 0,
         ];
     }
 }

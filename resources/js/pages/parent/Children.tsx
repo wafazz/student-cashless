@@ -1,14 +1,15 @@
 import { useForm, Link, router } from '@inertiajs/react';
 import ParentLayout from 'layouts/ParentLayout';
-import { Student, School } from 'types/models';
-import { useState, useRef } from 'react';
+import { Student, School, SchoolClass } from 'types/models';
+import { useState, useRef, useMemo } from 'react';
 
 interface Props {
     students: Student[];
     schools: School[];
+    classes: SchoolClass[];
 }
 
-export default function Children({ students, schools }: Props) {
+export default function Children({ students, schools, classes }: Props) {
     const [showForm, setShowForm] = useState(false);
     const [editingId, setEditingId] = useState<number | null>(null);
     const [photoPreview, setPhotoPreview] = useState<string | null>(null);
@@ -19,6 +20,7 @@ export default function Children({ students, schools }: Props) {
     const form = useForm({
         name: '',
         school_id: '',
+        class_id: '',
         ic_number: '',
         class_name: '',
         daily_limit_canteen: '',
@@ -29,12 +31,23 @@ export default function Children({ students, schools }: Props) {
     const editForm = useForm({
         name: '',
         school_id: '',
+        class_id: '',
         ic_number: '',
         class_name: '',
         daily_limit_canteen: '',
         daily_limit_koperasi: '',
         photo: null as File | null,
     });
+
+    const filteredClasses = useMemo(() => {
+        const sid = form.data.school_id ? Number(form.data.school_id) : null;
+        return sid ? classes.filter(c => c.school_id === sid) : [];
+    }, [classes, form.data.school_id]);
+
+    const editFilteredClasses = useMemo(() => {
+        const sid = editForm.data.school_id ? Number(editForm.data.school_id) : null;
+        return sid ? classes.filter(c => c.school_id === sid) : [];
+    }, [classes, editForm.data.school_id]);
 
     const handleAdd = (e: React.FormEvent) => {
         e.preventDefault();
@@ -54,6 +67,7 @@ export default function Children({ students, schools }: Props) {
         editForm.setData({
             name: student.name,
             school_id: String(student.school_id),
+            class_id: student.class_id ? String(student.class_id) : '',
             ic_number: student.ic_number || '',
             class_name: student.class_name || '',
             daily_limit_canteen: student.daily_limit_canteen ? String(student.daily_limit_canteen) : '',
@@ -160,8 +174,16 @@ export default function Children({ students, schools }: Props) {
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Class</label>
-                                <input type="text" value={form.data.class_name} onChange={e => form.setData('class_name', e.target.value)}
-                                    className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="e.g. 3 Bestari" />
+                                {filteredClasses.length > 0 ? (
+                                    <select value={form.data.class_id} onChange={e => { form.setData('class_id', e.target.value); const cls = filteredClasses.find(c => c.id === Number(e.target.value)); if (cls) form.setData('class_name', cls.name); }}
+                                        className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none">
+                                        <option value="">Select Class</option>
+                                        {filteredClasses.map(c => <option key={c.id} value={c.id}>{c.name}{c.level ? ` (${c.level})` : ''}</option>)}
+                                    </select>
+                                ) : (
+                                    <input type="text" value={form.data.class_name} onChange={e => form.setData('class_name', e.target.value)}
+                                        className="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Select school first or type class" />
+                                )}
                             </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700 mb-1">Kantin Limit (RM/day)</label>
@@ -234,8 +256,16 @@ export default function Children({ students, schools }: Props) {
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">Class</label>
-                                            <input type="text" value={editForm.data.class_name} onChange={e => editForm.setData('class_name', e.target.value)}
-                                                className="w-full px-4 py-2.5 border border-gray-300 rounded-xl outline-none" />
+                                            {editFilteredClasses.length > 0 ? (
+                                                <select value={editForm.data.class_id} onChange={e => { editForm.setData('class_id', e.target.value); const cls = editFilteredClasses.find(c => c.id === Number(e.target.value)); if (cls) editForm.setData('class_name', cls.name); }}
+                                                    className="w-full px-4 py-2.5 border border-gray-300 rounded-xl outline-none">
+                                                    <option value="">Select Class</option>
+                                                    {editFilteredClasses.map(c => <option key={c.id} value={c.id}>{c.name}{c.level ? ` (${c.level})` : ''}</option>)}
+                                                </select>
+                                            ) : (
+                                                <input type="text" value={editForm.data.class_name} onChange={e => editForm.setData('class_name', e.target.value)}
+                                                    className="w-full px-4 py-2.5 border border-gray-300 rounded-xl outline-none" />
+                                            )}
                                         </div>
                                         <div>
                                             <label className="block text-sm font-medium text-gray-700 mb-1">Kantin Limit (RM/day)</label>
