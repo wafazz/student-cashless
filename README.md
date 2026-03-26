@@ -1,22 +1,23 @@
 # Student Cashless
 
-Cashless school payment system for canteens (kantin) and bookstores (koperasi). Parents top up wallets, students show QR codes, store staff scan and charge from registered items.
+Cashless school payment system for canteens (kantin), bookstores (koperasi), PIBG fees, and school fees. Parents top up wallets, students show QR codes, store staff scan and charge from registered items.
 
 Built with Laravel 12, Inertia.js, React, Tailwind CSS, and React Native.
 
 ## Features
 
 ### Multi-Role System
-- **Admin** — manage schools, store operators, parents, transactions, invoices, reports, settings
-- **Operator** — scan & charge, menu/product management, sales, refunds, staff management
+- **Admin** — manage schools, operators, parents, transactions, packages, withdrawals, invoices, reports, settings
+- **School** — manage classes, stores, PIBG fees, school fees, subscription, withdrawals, receipts, settings
+- **Operator** — scan & charge, menu/product management, sales, refunds, staff management, withdrawals
 - **Cashier** — scan & charge, sales, refunds (assigned by operator)
-- **Parent** — manage children, top up wallets, view transactions, QR payments, profile
+- **Parent** — manage children, top up wallets, pay PIBG & school fees, view transactions, QR payments
 
 ### Store Types
 - **Kantin** (Canteen) — food & beverages
 - **Koperasi** (Bookstore) — books, stationery, school apparel
 
-Both share the same scan-charge-cart flow. UI adapts labels, placeholders, and icons based on store type. Admin dashboard shows separate sales stats per type.
+Both share the same scan-charge-cart flow. UI adapts labels, placeholders, and icons based on store type. Schools can register and manage their own stores.
 
 ### Wallet System
 - **Student wallets** — managed by parents, QR-based payments
@@ -38,10 +39,51 @@ Both share the same scan-charge-cart flow. UI adapts labels, placeholders, and i
 - Auto-calculated totals and auto-generated descriptions
 - Charge button disabled until cart has items
 
+### PIBG (Parents-Teachers Association) Fees
+- School creates PIBG fees (e.g. Yuran PIBG 2026)
+- **Per-family** — one fee per parent per school (not per student)
+- Auto-assigns to all unique parents with children in the school
+- Reassign button for late-enrolled families
+- Parents pay via wallet, receipt generated with school branding
+
+### School Fees (Per-Student, Per-Class)
+- School registers classes (e.g. "3 Bestari", "5 Cemerlang")
+- Creates fees per class or all classes with different amounts
+- Auto-assigns to students in the targeted class
+- Parents pay per student via wallet
+- Branded PDF receipts with school logo
+
+### Class Management
+- School registers classes with optional level/year
+- Parents select from registered classes when adding children (dropdown)
+- Falls back to free text if no classes registered
+
+### Subscription Packages
+- **Trial** — FREE, one-time only per school, auto-activates instantly
+- **Monthly** — pay monthly, starts 1st of next month
+- **Yearly** — pay yearly lump sum, starts 1st of next month
+- School uploads payment receipt, admin approves to activate
+- Trial auto-extends to end of month when upgrading (no gap)
+- Renewal window: can only renew within 7 days before expiry
+- Expired subscription: retroactive start from 1st of current month
+- Admin manages packages (name, price, duration, features) dynamically
+
+### Settlement & Withdrawals
+- **Stores**: track earnings from sales, request withdrawal with platform fee
+- **Schools**: track PIBG + school fee collections, request withdrawal
+- Bank details management for both entities
+- Admin approves/rejects withdrawals, marks as paid with bank reference
+- Withdrawal fee % configurable from admin settings (default: 3% stores, 2% schools)
+
+### School Receipts & Branding
+- School uploads logo and sets contact info (name, address, phone, email)
+- Branded PDF receipts for PIBG and school fee payments
+- Includes school logo, contact info, PAID watermark, fee details
+
 ### Payment Gateways
 - Bayarcash (FPX)
 - ToyyibPay (FPX)
-- Manual top-up
+- Manual top-up / manual bank transfer (with receipt upload)
 
 ### Mobile App (React Native)
 - Operator app: QR scan, cart charging, sales, refunds, menu/product management, staff
@@ -50,15 +92,15 @@ Both share the same scan-charge-cart flow. UI adapts labels, placeholders, and i
 - Camera-based QR scanning with react-native-vision-camera
 
 ### Other
-- School subscription & invoicing
 - Canteen/koperasi contracts with staff (cashier/manager) management
 - Service fee management with waiver thresholds
 - Low balance notifications (database + email)
-- PDF receipt generation (purchase + topup)
+- PDF receipt generation (purchase + topup + fees)
 - Student photo verification during scan
 - School registration (public form)
 - PWA support (offline page, manifest, service worker)
 - Landing page with features showcase
+- Standardized date format: "4th April, 2026"
 
 ## Tech Stack
 
@@ -130,11 +172,13 @@ Visit `http://localhost:8000`
 
 ## Default Credentials
 
-| Role | Email | Password | Store |
-|------|-------|----------|-------|
-| Admin | admin@ekantin.my | admin123 | — |
-| Operator | kiah@ekantin.my | password | Kantin Utama (SK Taman Melawati) |
-| Operator | ahmad@ekantin.my | password | Kantin Blok A (SK Wangsa Maju) |
+| Role | Email | Password | Details |
+|------|-------|----------|---------|
+| Admin | admin@ekantin.my | admin123 | Platform admin |
+| School | pibg@skmelawati.my | password | SK Taman Melawati |
+| School | pibg@skwangsa.my | password | SK Wangsa Maju |
+| Operator | kiah@ekantin.my | password | Kantin Utama |
+| Operator | ahmad@ekantin.my | password | Kantin Blok A |
 | Parent | siti@test.com | password | 2 children |
 | Parent | abu@test.com | password | 1 child |
 
@@ -189,32 +233,43 @@ See `routes/api.php` for full list.
 
 ```
 app/
-  Console/Commands/     # ResetDailySpent, CheckLowBalance, GenerateInvoices
+  Console/Commands/     # ResetDailySpent, CheckLowBalance, ActivateSubscriptions,
+                        # GenerateInvoices, CheckSubscriptionExpiry
   Http/Controllers/
     Admin/              # Dashboard, Schools, Operators, Parents, Transactions,
-                        # Reports, Settings, Invoices, Registrations
-    Operator/           # Dashboard, Scan, Menu, Sales, Refund, Staff
+                        # Reports, Settings, Invoices, Registrations, Packages,
+                        # SubscriptionPayments, Withdrawals, Pibg, SchoolUsers
+    School/             # Dashboard, Classes, Stores, PibgFees, SchoolFees,
+                        # Subscription, Withdrawals, Receipts, Settings, Reports
+    Operator/           # Dashboard, Scan, Menu, Sales, Refund, Staff, Withdrawals
     Parent/             # Dashboard, Children, Topup, Wallet, Transactions,
-                        # Notifications, Profile
+                        # Notifications, Profile, PibgFees, SchoolFees
     Api/                # OperatorApiController, ParentApiController
     Payment/            # Bayarcash & ToyyibPay callbacks
-  Models/               # User, Student, School, Canteen, MenuItem, Transaction,
-                        # Topup, CanteenStaff, Invoice, SchoolRegistration
+  Models/               # User, Student, School, SchoolClass, Canteen, MenuItem,
+                        # Transaction, Topup, CanteenStaff, Invoice, PibgFee,
+                        # PibgFeeParent, SchoolFee, SchoolFeeStudent, Withdrawal,
+                        # SubscriptionPackage, SubscriptionPayment, SchoolRegistration
   Services/             # BayarcashService, ToyyibPayService, ReceiptService
   Notifications/        # LowBalance, TopupSuccess, DailySpending, SubscriptionExpiry
 
 resources/js/
-  layouts/              # AdminLayout, OperatorLayout, ParentLayout, AuthLayout
+  layouts/              # AdminLayout, OperatorLayout, ParentLayout, SchoolLayout, AuthLayout
   pages/
-    admin/              # Dashboard, Schools, Operators, Parents, Transactions,
-                        # Reports, Settings, Invoices, Registrations
-    operator/           # Dashboard, Scan, Menu, Sales, Refund, Staff
-    parent/             # Dashboard, Children, Wallet, WalletTopup, WalletQr,
-                        # Topup, TopupHistory, AllTransactions, Notifications, Profile
+    admin/              # Dashboard, Schools, Operators, Parents, Transactions, Reports,
+                        # Settings, Invoices, Registrations, Packages, SubscriptionPayments,
+                        # Withdrawals, Pibg, SchoolUsers
+    school/             # Dashboard, Classes, Stores, PibgFees, PibgFeeDetail, SchoolFees,
+                        # SchoolFeeDetail, Subscription, Withdrawals, Reports, Settings
+    operator/           # Dashboard, Scan, Menu, Sales, Refund, Staff, Withdrawals
+    parent/             # Dashboard, Children, Wallet, WalletTopup, WalletQr, Topup,
+                        # TopupHistory, AllTransactions, Notifications, Profile,
+                        # PibgFees, SchoolFees
   types/models.ts       # TypeScript interfaces
+  utils/date.ts         # Shared date formatting helpers
 
 routes/
-  web.php               # 70+ web routes
+  web.php               # 90+ web routes
   api.php               # 52+ API routes
 ```
 
@@ -223,9 +278,23 @@ routes/
 ```bash
 # Add to crontab: * * * * * cd /path && php artisan schedule:run >> /dev/null 2>&1
 
-php artisan students:reset-daily-spent    # Midnight — reset canteen + koperasi spent
-php artisan students:check-low-balance    # 8:00 AM — notify parents of low balance
+students:reset-daily-spent       # 00:00 — reset canteen + koperasi spent counters
+subscriptions:activate           # 00:05 — flip trial → active on paid plan start date
+schools:check-subscription       # 01:00 — check expiring subscriptions
+students:check-low-balance       # 08:00 — notify parents of low balance
+invoices:generate                # 1st of month 02:00 — generate monthly invoices
 ```
+
+## Revenue Model
+
+| Source | Type |
+|--------|------|
+| School subscription (Trial/Monthly/Yearly) | Recurring |
+| Top-up service fee (per transaction) | Per-use |
+| Store withdrawal fee (configurable %) | On withdrawal |
+| School withdrawal fee (configurable %) | On withdrawal |
+
+All fees configurable from Admin > Settings.
 
 ## Deployment (VPS)
 
